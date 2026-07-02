@@ -57,3 +57,11 @@ Project scaffold is ready. The first dataset is `b-mc2/sql-create-context`; exac
 ```bash
 uv run --extra data python -m qwen_qlora_sql_benchmark.data.download_sql_create_context
 ```
+
+## Run Baseline
+
+On Kaggle or another Linux GPU runtime:
+
+```bash
+scripts/kaggle_baseline.sh
+```

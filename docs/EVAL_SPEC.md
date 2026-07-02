@@ -33,6 +33,14 @@ Raw outputs:
 - `results/eval_outputs/lora_r16_predictions.jsonl`
 - `results/eval_outputs/lora_r32_predictions.jsonl`
 
+## Baseline Command
+
+```bash
+scripts/kaggle_baseline.sh
+```
+
+This command writes base model predictions first, then scores Exact Match.
+
 ## Controls
 
 - Use the same eval prompts for every experiment.
