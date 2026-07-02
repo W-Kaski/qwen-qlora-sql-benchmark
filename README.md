@@ -90,3 +90,6 @@ Current full rank 8 result:
 | Qwen2.5-1.5B-Instruct | 500 | 0.044 | 185.80 seconds |
 | LoRA rank 8 | 500 | 0.684 | 568.25 seconds |
 | LoRA rank 16 | 500 | 0.696 | 657.88 seconds |
+| LoRA rank 32 | 500 | 0.712 | 530.83 seconds |
+
+Current finding: rank 32 has the best Exact Match result, while rank 8 is close and cheaper in adapter size. This is still an Exact Match result, not a database execution result.

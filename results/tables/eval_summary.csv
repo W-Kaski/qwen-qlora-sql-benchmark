@@ -4,3 +4,5 @@ Qwen2.5-1.5B-Instruct + LoRA r8 diagnostic,8,50,0.48,64.98
 Qwen2.5-1.5B-Instruct + LoRA r8,8,500,0.684,568.25
 Qwen2.5-1.5B-Instruct + LoRA r16 diagnostic,16,50,0.44,66.52
 Qwen2.5-1.5B-Instruct + LoRA r16,16,500,0.696,657.88
+Qwen2.5-1.5B-Instruct + LoRA r32 diagnostic,32,50,0.48,72.01
+Qwen2.5-1.5B-Instruct + LoRA r32,32,500,0.712,530.83

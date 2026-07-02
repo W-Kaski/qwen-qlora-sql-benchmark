@@ -63,3 +63,5 @@ The local rank 8 diagnostic completed 30 steps without OOM. Training loss moved 
 The full local rank 8 run completed 1 epoch over 5000 train rows in `1095.10` wall-clock seconds. It scored `0.684` Exact Match on the 500-row eval split compared with `0.044` for the base model.
 
 The full local rank 16 run completed 1 epoch over 5000 train rows in `1132.98` wall-clock seconds. It scored `0.696` Exact Match on the 500-row eval split.
+
+The full local rank 32 run completed 1 epoch over 5000 train rows in `1077.81` wall-clock seconds. It scored `0.712` Exact Match on the 500-row eval split, the best Exact Match result in the current rank ablation.

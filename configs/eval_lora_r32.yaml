@@ -1,0 +1,16 @@
+experiment:
+  name: qwen25_15b_text2sql_r32a64_lr1e4_eval_v1
+  stage: adapter_eval
+model:
+  name: Qwen/Qwen2.5-1.5B-Instruct
+adapter:
+  path: outputs/adapters/lora_r32
+data:
+  eval_path: data/splits/eval.jsonl
+generation:
+  max_new_tokens: 256
+  temperature: 0.0
+  top_p: 1.0
+outputs:
+  predictions_path: results/eval_outputs/lora_r32_predictions.jsonl
+  summary_path: results/tables/lora_r32_eval.csv

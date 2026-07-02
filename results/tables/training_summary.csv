@@ -1,3 +1,4 @@
 experiment,rank,train_examples,eval_examples,max_steps,epochs,first_loss,last_loss,final_eval_loss,train_runtime_seconds,wall_time_seconds,train_loss
 qwen25_15b_text2sql_r8a16_lr1e4_v1,8,5000,500,full_epoch,1,1.3266,0.0484,0.059545669704675674,1085.7485,1095.1,0.1382193302336973
 qwen25_15b_text2sql_r16a32_lr1e4_v1,16,5000,500,full_epoch,1,1.2632,0.0438,0.05369124561548233,1123.2279,1132.98,0.11927870082588622
+qwen25_15b_text2sql_r32a64_lr1e4_v1,32,5000,500,full_epoch,1,1.179,0.0391,0.04981090873479843,1067.4717,1077.81,0.10283109224356782

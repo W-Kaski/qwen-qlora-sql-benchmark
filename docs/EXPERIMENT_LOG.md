@@ -167,3 +167,62 @@
 - Baseline on same 500 rows: `exact_match=0.044`
 - Rank 8 on same 500 rows: `exact_match=0.684`
 - Decision: proceed to rank 32 diagnostic to complete rank ablation
+
+### 2026-07-02 lora-r32-diagnostic-local
+
+- Config: `configs/train_lora_r32_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_train_r32_diagnostic.sh`
+- Output adapter: `outputs/adapters/lora_r32_diagnostic`
+- Train rows: 200
+- Eval rows: 50
+- Max steps: 30
+- Wall time: 125.38 seconds
+- Trainer runtime: 116.0133 seconds
+- First train loss: 1.499
+- Last train loss: 0.0169
+- Final eval loss: 0.11994793266057968
+- Decision: proceed to rank 32 full run
+
+### 2026-07-02 lora-r32-diagnostic-eval-local
+
+- Config: `configs/eval_lora_r32_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r32_diagnostic.sh`
+- Output summary: `results/tables/lora_r32_diagnostic_eval.csv`
+- Eval rows: 50
+- Wall time: 72.01 seconds
+- Metrics: `count=50`, `exact_match=0.48`
+- Decision: proceed to full rank 32
+
+### 2026-07-02 lora-r32-full-local
+
+- Config: `configs/train_lora_r32.yaml`
+- Runtime: local WSL GPU
+- Command: `env PYTHONPATH=src python3 -m qwen_qlora_sql_benchmark.train.train_qlora --config configs/train_lora_r32.yaml`
+- Output adapter: `outputs/adapters/lora_r32`
+- Output log: `results/logs/lora_r32_train.jsonl`
+- Train rows: 5000
+- Eval rows: 500
+- Epochs: 1
+- Wall time: 1077.81 seconds
+- Trainer runtime: 1067.4717 seconds
+- First logged train loss: 1.179
+- Last logged train loss: 0.0391
+- Final logged eval loss: 0.04981090873479843
+- Decision: evaluate full rank 32 adapter on the 500-row eval split
+
+### 2026-07-02 lora-r32-full-eval-local
+
+- Config: `configs/eval_lora_r32.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r32.sh`
+- Output predictions: `results/eval_outputs/lora_r32_predictions.jsonl`
+- Output summary: `results/tables/lora_r32_eval.csv`
+- Eval rows: 500
+- Wall time: 530.83 seconds
+- Metrics: `count=500`, `exact_match=0.712`
+- Baseline on same 500 rows: `exact_match=0.044`
+- Rank 8 on same 500 rows: `exact_match=0.684`
+- Rank 16 on same 500 rows: `exact_match=0.696`
+- Decision: rank 32 is the best Exact Match result so far; proceed to metric and report cleanup
