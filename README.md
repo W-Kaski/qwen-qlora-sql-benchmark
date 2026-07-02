@@ -65,3 +65,9 @@ On Kaggle or another Linux GPU runtime:
 ```bash
 scripts/kaggle_baseline.sh
 ```
+
+Current baseline result:
+
+| Model | Eval rows | Exact Match | Runtime |
+| --- | ---: | ---: | ---: |
+| Qwen2.5-1.5B-Instruct | 500 | 0.044 | 185.80 seconds |

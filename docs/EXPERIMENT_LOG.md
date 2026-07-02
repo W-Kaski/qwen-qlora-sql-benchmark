@@ -33,3 +33,15 @@
 - Local score check: `count=2`, `exact_match=0.5`
 - Observations: baseline script writes raw predictions before Exact Match scoring
 - Decision: run full baseline generation on Kaggle or another Linux GPU runtime
+
+### 2026-07-02 baseline-generation-full-local
+
+- Config: `configs/train_baseline.yaml`
+- Runtime: local WSL GPU
+- Command: `env PYTHONPATH=src python3 -m qwen_qlora_sql_benchmark.eval.baseline_generation --config configs/train_baseline.yaml`
+- Output predictions: `results/eval_outputs/base_model_predictions.jsonl`
+- Output summary: `results/tables/baseline_eval.csv`
+- Wall time: 185.80 seconds
+- Metrics: `count=500`, `exact_match=0.044`
+- Observations: first-pass base model predictions are often structurally close but fail exact string matching
+- Decision: use this result as the base quality comparison before QLoRA diagnostic training

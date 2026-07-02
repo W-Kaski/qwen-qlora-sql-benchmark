@@ -14,8 +14,6 @@ outputs/checkpoints/*
 outputs/diagnostics/*
 results/eval_outputs/*
 results/logs/*
-results/tables/*
-results/figures/*
 
 # Keep directory contracts visible
 !data/raw/.gitkeep
@@ -26,8 +24,6 @@ results/figures/*
 !outputs/diagnostics/.gitkeep
 !results/eval_outputs/.gitkeep
 !results/logs/.gitkeep
-!results/tables/.gitkeep
-!results/figures/.gitkeep
 
 # Model and dataset payloads
 *.safetensors
