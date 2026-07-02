@@ -104,3 +104,11 @@ Quality metrics:
 | LoRA rank 32 | 0.712 | 0.990 |
 
 See [docs/EVAL_ANALYSIS.md](docs/EVAL_ANALYSIS.md) for interpretation and limitations.
+
+## Figures
+
+![Exact Match by Rank](results/figures/exact_match_by_rank.png)
+
+![Training Time by Rank](results/figures/training_time_by_rank.png)
+
+![SQL Validity by Model](results/figures/sql_validity_by_model.png)
