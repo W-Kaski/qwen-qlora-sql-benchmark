@@ -109,3 +109,61 @@
 - Baseline on same 500 rows: `exact_match=0.044`
 - Shape check: 500 unique predictions, 500 predictions starting with `SELECT`, 0 empty predictions
 - Decision: proceed to rank 16 diagnostic after committing rank 8 artifacts
+
+### 2026-07-02 lora-r16-diagnostic-local
+
+- Config: `configs/train_lora_r16_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_train_r16_diagnostic.sh`
+- Output adapter: `outputs/adapters/lora_r16_diagnostic`
+- Train rows: 200
+- Eval rows: 50
+- Max steps: 30
+- Wall time: 117.60 seconds
+- Trainer runtime: 103.7101 seconds
+- First train loss: 1.499
+- Last train loss: 0.0275
+- Final eval loss: 0.13401997089385986
+- Decision: proceed to rank 16 full run
+
+### 2026-07-02 lora-r16-diagnostic-eval-local
+
+- Config: `configs/eval_lora_r16_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r16_diagnostic.sh`
+- Output summary: `results/tables/lora_r16_diagnostic_eval.csv`
+- Eval rows: 50
+- Wall time: 66.52 seconds
+- Metrics: `count=50`, `exact_match=0.44`
+- Decision: proceed to full rank 16 despite diagnostic Exact Match being slightly below rank 8 diagnostic
+
+### 2026-07-02 lora-r16-full-local
+
+- Config: `configs/train_lora_r16.yaml`
+- Runtime: local WSL GPU
+- Command: `env PYTHONPATH=src python3 -m qwen_qlora_sql_benchmark.train.train_qlora --config configs/train_lora_r16.yaml`
+- Output adapter: `outputs/adapters/lora_r16`
+- Output log: `results/logs/lora_r16_train.jsonl`
+- Train rows: 5000
+- Eval rows: 500
+- Epochs: 1
+- Wall time: 1132.98 seconds
+- Trainer runtime: 1123.2279 seconds
+- First logged train loss: 1.2632
+- Last logged train loss: 0.0438
+- Final logged eval loss: 0.05369124561548233
+- Decision: evaluate full rank 16 adapter on the 500-row eval split
+
+### 2026-07-02 lora-r16-full-eval-local
+
+- Config: `configs/eval_lora_r16.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r16.sh`
+- Output predictions: `results/eval_outputs/lora_r16_predictions.jsonl`
+- Output summary: `results/tables/lora_r16_eval.csv`
+- Eval rows: 500
+- Wall time: 657.88 seconds
+- Metrics: `count=500`, `exact_match=0.696`
+- Baseline on same 500 rows: `exact_match=0.044`
+- Rank 8 on same 500 rows: `exact_match=0.684`
+- Decision: proceed to rank 32 diagnostic to complete rank ablation

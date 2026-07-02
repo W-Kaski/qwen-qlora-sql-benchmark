@@ -61,3 +61,5 @@ This command uses `configs/train_lora_r8_diagnostic.yaml` and limits training to
 The local rank 8 diagnostic completed 30 steps without OOM. Training loss moved from `1.499` to `0.0519`, final eval loss was `0.14725497364997864`, and the diagnostic adapter scored `0.48` Exact Match on the first 50 eval rows compared with `0.04` for the base model on the same rows.
 
 The full local rank 8 run completed 1 epoch over 5000 train rows in `1095.10` wall-clock seconds. It scored `0.684` Exact Match on the 500-row eval split compared with `0.044` for the base model.
+
+The full local rank 16 run completed 1 epoch over 5000 train rows in `1132.98` wall-clock seconds. It scored `0.696` Exact Match on the 500-row eval split.

@@ -89,3 +89,4 @@ Current full rank 8 result:
 | --- | ---: | ---: | ---: |
 | Qwen2.5-1.5B-Instruct | 500 | 0.044 | 185.80 seconds |
 | LoRA rank 8 | 500 | 0.684 | 568.25 seconds |
+| LoRA rank 16 | 500 | 0.696 | 657.88 seconds |
