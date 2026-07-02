@@ -1,0 +1,4 @@
+model,rank,eval_rows,exact_match,runtime_seconds
+Qwen2.5-1.5B-Instruct,baseline,500,0.044,185.8
+Qwen2.5-1.5B-Instruct + LoRA r8 diagnostic,8,50,0.48,64.98
+Qwen2.5-1.5B-Instruct + LoRA r8,8,500,0.684,568.25

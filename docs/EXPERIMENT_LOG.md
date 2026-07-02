@@ -78,3 +78,34 @@
 - Shape check: 50 unique predictions, 50 predictions starting with `SELECT`, 0 empty predictions
 - Observations: strong early signal, but diagnostic used repeated passes over 200 train rows
 - Decision: proceed to full rank 8 run with 1 epoch over the 5000-row train split
+
+### 2026-07-02 lora-r8-full-local
+
+- Config: `configs/train_lora_r8.yaml`
+- Runtime: local WSL GPU
+- Command: `env PYTHONPATH=src python3 -m qwen_qlora_sql_benchmark.train.train_qlora --config configs/train_lora_r8.yaml`
+- Output adapter: `outputs/adapters/lora_r8`
+- Output log: `results/logs/lora_r8_train.jsonl`
+- Train rows: 5000
+- Eval rows: 500
+- Epochs: 1
+- Wall time: 1095.10 seconds
+- Trainer runtime: 1085.7485 seconds
+- First logged train loss: 1.3266
+- Last logged train loss: 0.0484
+- Final logged eval loss: 0.059545669704675674
+- Decision: evaluate full rank 8 adapter on the 500-row eval split
+
+### 2026-07-02 lora-r8-full-eval-local
+
+- Config: `configs/eval_lora_r8.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r8.sh`
+- Output predictions: `results/eval_outputs/lora_r8_predictions.jsonl`
+- Output summary: `results/tables/lora_r8_eval.csv`
+- Eval rows: 500
+- Wall time: 568.25 seconds
+- Metrics: `count=500`, `exact_match=0.684`
+- Baseline on same 500 rows: `exact_match=0.044`
+- Shape check: 500 unique predictions, 500 predictions starting with `SELECT`, 0 empty predictions
+- Decision: proceed to rank 16 diagnostic after committing rank 8 artifacts

@@ -1,0 +1,2 @@
+experiment,rank,train_examples,eval_examples,max_steps,epochs,first_loss,last_loss,final_eval_loss,train_runtime_seconds,train_loss
+qwen25_15b_text2sql_r8a16_lr1e4_v1,8,5000,500,full_epoch,1,1.3266,0.0484,0.059545669704675674,1085.7485,0.1382193302336973
