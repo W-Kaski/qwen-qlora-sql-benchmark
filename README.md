@@ -112,3 +112,7 @@ See [docs/EVAL_ANALYSIS.md](docs/EVAL_ANALYSIS.md) for interpretation and limita
 ![Training Time by Rank](results/figures/training_time_by_rank.png)
 
 ![SQL Validity by Model](results/figures/sql_validity_by_model.png)
+
+![Latency Comparison](results/figures/latency_comparison.png)
+
+![Throughput Comparison](results/figures/throughput_comparison.png)

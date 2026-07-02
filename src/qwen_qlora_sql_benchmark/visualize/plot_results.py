@@ -64,6 +64,37 @@ def save_sql_validity_plot(quality_metrics: pd.DataFrame, output: Path) -> None:
     plt.close(fig)
 
 
+def save_serving_latency_plot(serving: pd.DataFrame, output: Path) -> None:
+    labels = list(serving["backend"])
+    p50 = list(serving["p50_latency_seconds"])
+    p95 = list(serving["p95_latency_seconds"])
+    x_positions = range(len(labels))
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.bar([x - 0.18 for x in x_positions], p50, width=0.36, label="P50", color="#2563EB")
+    ax.bar([x + 0.18 for x in x_positions], p95, width=0.36, label="P95", color="#DC2626")
+    ax.set_xticks(list(x_positions), labels)
+    ax.set_ylabel("Seconds")
+    ax.set_title("Single-Request Latency")
+    ax.legend()
+    fig.tight_layout()
+    fig.savefig(output, dpi=160)
+    plt.close(fig)
+
+
+def save_serving_throughput_plot(serving: pd.DataFrame, output: Path) -> None:
+    labels = list(serving["backend"])
+    values = list(serving["tokens_per_second"])
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.bar(labels, values, color="#7C3AED")
+    ax.set_ylabel("Tokens per second")
+    ax.set_title("Single-Request Throughput")
+    for index, value in enumerate(values):
+        ax.text(index, value + 1.0, f"{value:.1f}", ha="center", fontsize=9)
+    fig.tight_layout()
+    fig.savefig(output, dpi=160)
+    plt.close(fig)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Generate result plots.")
     parser.add_argument(
@@ -74,6 +105,9 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--quality-metrics", type=Path, default=Path("results/tables/quality_metrics.csv")
+    )
+    parser.add_argument(
+        "--serving-benchmark", type=Path, default=Path("results/tables/serving_benchmark.csv")
     )
     parser.add_argument("--output-dir", type=Path, default=Path("results/figures"))
     return parser.parse_args()
@@ -88,6 +122,10 @@ def main() -> None:
     save_exact_match_plot(eval_summary, args.output_dir / "exact_match_by_rank.png")
     save_training_time_plot(training_summary, args.output_dir / "training_time_by_rank.png")
     save_sql_validity_plot(quality_metrics, args.output_dir / "sql_validity_by_model.png")
+    if args.serving_benchmark.exists():
+        serving = pd.read_csv(args.serving_benchmark)
+        save_serving_latency_plot(serving, args.output_dir / "latency_comparison.png")
+        save_serving_throughput_plot(serving, args.output_dir / "throughput_comparison.png")
 
 
 if __name__ == "__main__":
