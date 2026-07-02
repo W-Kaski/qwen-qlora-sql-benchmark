@@ -50,4 +50,10 @@ python -m qwen_qlora_sql_benchmark.utils
 
 ## Current Status
 
-Project scaffold is ready. Dataset selection and field inspection are the next step.
+Project scaffold is ready. The first dataset is `b-mc2/sql-create-context`; exact fields have been verified as `answer`, `question`, and `context`.
+
+## Prepare Dataset
+
+```bash
+uv run --extra data python -m qwen_qlora_sql_benchmark.data.download_sql_create_context
+```

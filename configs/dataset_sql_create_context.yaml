@@ -1,0 +1,16 @@
+dataset:
+  name: b-mc2/sql-create-context
+  split: train
+  verified_fields:
+    answer: sql_query
+    question: natural_language_question
+    context: create_table_schema
+splits:
+  seed: 42
+  train_size: 5000
+  eval_size: 500
+  benchmark_size: 100
+outputs:
+  train_path: data/splits/train.jsonl
+  eval_path: data/splits/eval.jsonl
+  benchmark_prompts_path: data/splits/benchmark_prompts.jsonl
