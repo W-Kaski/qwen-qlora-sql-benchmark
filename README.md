@@ -20,6 +20,10 @@ The first release answers three questions:
 
 vLLM LoRA serving is not required for the first release.
 
+## Dataset Notes
+
+See [docs/DATASET_ANALYSIS.md](docs/DATASET_ANALYSIS.md) for split statistics, SQL pattern distribution, and baseline failure modes.
+
 ## Repository Layout
 
 ```text
