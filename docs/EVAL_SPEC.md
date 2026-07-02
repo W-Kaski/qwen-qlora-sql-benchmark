@@ -49,6 +49,14 @@ scripts/local_eval_r8_diagnostic.sh
 
 This command evaluates `outputs/adapters/lora_r8_diagnostic` on the first 50 eval rows.
 
+## Quality Metrics Command
+
+```bash
+scripts/score_quality_metrics.sh
+```
+
+This command creates `results/tables/quality_metrics.csv`. SQL validity is parse validity, not database execution correctness.
+
 ## Controls
 
 - Use the same eval prompts for every experiment.

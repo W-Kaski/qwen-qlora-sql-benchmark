@@ -1,0 +1,5 @@
+model,count,exact_match,sql_parse_valid,starts_select,empty
+baseline,500,0.044,0.98,1.0,0.0
+lora_r8,500,0.684,0.992,1.0,0.0
+lora_r16,500,0.696,0.994,1.0,0.0
+lora_r32,500,0.712,0.99,1.0,0.0

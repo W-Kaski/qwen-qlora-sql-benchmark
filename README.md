@@ -41,8 +41,8 @@ tests/        local validation tests
 ## Local Validation
 
 ```bash
-uv run pytest
-uv run ruff check .
+uv run --extra dev pytest
+uv run --extra dev ruff check .
 ```
 
 ## Kaggle Setup
@@ -93,3 +93,14 @@ Current full rank 8 result:
 | LoRA rank 32 | 500 | 0.712 | 530.83 seconds |
 
 Current finding: rank 32 has the best Exact Match result, while rank 8 is close and cheaper in adapter size. This is still an Exact Match result, not a database execution result.
+
+Quality metrics:
+
+| Model | Exact Match | SQL Parse Valid |
+| --- | ---: | ---: |
+| baseline | 0.044 | 0.980 |
+| LoRA rank 8 | 0.684 | 0.992 |
+| LoRA rank 16 | 0.696 | 0.994 |
+| LoRA rank 32 | 0.712 | 0.990 |
+
+See [docs/EVAL_ANALYSIS.md](docs/EVAL_ANALYSIS.md) for interpretation and limitations.
