@@ -19,6 +19,7 @@
 | Experiment | Config | LoRA rank | LoRA alpha |
 | --- | --- | ---: | ---: |
 | baseline | `configs/train_baseline.yaml` | none | none |
+| rank 8 diagnostic | `configs/train_lora_r8_diagnostic.yaml` | 8 | 16 |
 | rank 8 | `configs/train_lora_r8.yaml` | 8 | 16 |
 | rank 16 | `configs/train_lora_r16.yaml` | 16 | 32 |
 | rank 32 | `configs/train_lora_r32.yaml` | 32 | 64 |
@@ -46,3 +47,11 @@ Training data must be JSONL with exact keys:
 ```
 
 Dataset-specific field names must be read from the dataset files before conversion.
+
+## Diagnostic Command
+
+```bash
+scripts/local_train_r8_diagnostic.sh
+```
+
+This command uses `configs/train_lora_r8_diagnostic.yaml` and limits training to 200 train rows, 50 eval rows, and 30 optimizer steps.
