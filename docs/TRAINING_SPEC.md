@@ -55,3 +55,7 @@ scripts/local_train_r8_diagnostic.sh
 ```
 
 This command uses `configs/train_lora_r8_diagnostic.yaml` and limits training to 200 train rows, 50 eval rows, and 30 optimizer steps.
+
+## Latest Diagnostic Observation
+
+The local rank 8 diagnostic completed 30 steps without OOM. Training loss moved from `1.499` to `0.0519`, final eval loss was `0.14725497364997864`, and the diagnostic adapter scored `0.48` Exact Match on the first 50 eval rows compared with `0.04` for the base model on the same rows.

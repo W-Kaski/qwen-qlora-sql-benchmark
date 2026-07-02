@@ -41,6 +41,14 @@ scripts/kaggle_baseline.sh
 
 This command writes base model predictions first, then scores Exact Match.
 
+## Diagnostic Adapter Command
+
+```bash
+scripts/local_eval_r8_diagnostic.sh
+```
+
+This command evaluates `outputs/adapters/lora_r8_diagnostic` on the first 50 eval rows.
+
 ## Controls
 
 - Use the same eval prompts for every experiment.

@@ -45,3 +45,36 @@
 - Metrics: `count=500`, `exact_match=0.044`
 - Observations: first-pass base model predictions are often structurally close but fail exact string matching
 - Decision: use this result as the base quality comparison before QLoRA diagnostic training
+
+### 2026-07-02 lora-r8-diagnostic-local
+
+- Config: `configs/train_lora_r8_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_train_r8_diagnostic.sh`
+- Output adapter: `outputs/adapters/lora_r8_diagnostic`
+- Output log: `results/logs/lora_r8_diagnostic_train.jsonl`
+- Train rows: 200
+- Eval rows: 50
+- Max steps: 30
+- Wall time: 117.66 seconds
+- Trainer runtime: 100.9827 seconds
+- First train loss: 1.499
+- Last train loss: 0.0519
+- Final eval loss: 0.14725497364997864
+- Grad norm range observed in logs: approximately 0.3998 to 3.2584
+- Decision: proceed to adapter diagnostic evaluation
+
+### 2026-07-02 lora-r8-diagnostic-eval-local
+
+- Config: `configs/eval_lora_r8_diagnostic.yaml`
+- Runtime: local WSL GPU
+- Command: `scripts/local_eval_r8_diagnostic.sh`
+- Output predictions: `results/eval_outputs/lora_r8_diagnostic_predictions.jsonl`
+- Output summary: `results/tables/lora_r8_diagnostic_eval.csv`
+- Eval rows: 50
+- Wall time: 64.98 seconds
+- Metrics: `count=50`, `exact_match=0.48`
+- Baseline on same first 50 rows: `exact_match=0.04`
+- Shape check: 50 unique predictions, 50 predictions starting with `SELECT`, 0 empty predictions
+- Observations: strong early signal, but diagnostic used repeated passes over 200 train rows
+- Decision: proceed to full rank 8 run with 1 epoch over the 5000-row train split

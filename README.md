@@ -75,3 +75,10 @@ Current baseline result:
 | Model | Eval rows | Exact Match | Runtime |
 | --- | ---: | ---: | ---: |
 | Qwen2.5-1.5B-Instruct | 500 | 0.044 | 185.80 seconds |
+
+Current diagnostic result:
+
+| Model | Eval rows | Exact Match | Runtime |
+| --- | ---: | ---: | ---: |
+| baseline on first 50 rows | 50 | 0.04 | already generated |
+| LoRA rank 8 diagnostic | 50 | 0.48 | 64.98 seconds |
