@@ -1,0 +1,44 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.pyc
+*.egg-info/
+
+# Local and Kaggle artifacts
+data/raw/*
+data/processed/*
+data/splits/*
+outputs/adapters/*
+outputs/checkpoints/*
+outputs/diagnostics/*
+results/eval_outputs/*
+results/logs/*
+results/tables/*
+results/figures/*
+
+# Keep directory contracts visible
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/splits/.gitkeep
+!outputs/adapters/.gitkeep
+!outputs/checkpoints/.gitkeep
+!outputs/diagnostics/.gitkeep
+!results/eval_outputs/.gitkeep
+!results/logs/.gitkeep
+!results/tables/.gitkeep
+!results/figures/.gitkeep
+
+# Model and dataset payloads
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.sqlite
+*.db
+*.duckdb
+
+# Secrets and local machine state
+.env
+.kaggle/
+kaggle.json

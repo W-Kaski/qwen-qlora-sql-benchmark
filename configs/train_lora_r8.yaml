@@ -1,0 +1,38 @@
+experiment:
+  name: qwen25_15b_text2sql_r8a16_lr1e4_v1
+  stage: qlora
+model:
+  name: Qwen/Qwen2.5-1.5B-Instruct
+data:
+  train_path: data/splits/train.jsonl
+  eval_path: data/splits/eval.jsonl
+training:
+  completion_only_loss: true
+  max_seq_length: 1024
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 16
+  num_train_epochs: 1
+  learning_rate: 0.0001
+  warmup_ratio: 0.1
+  logging_steps: 10
+  eval_steps: 100
+  save_steps: 100
+quantization:
+  load_in_4bit: true
+  bnb_4bit_quant_type: nf4
+  bnb_4bit_compute_dtype: bfloat16
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+outputs:
+  adapter_dir: outputs/adapters/lora_r8
+  log_path: results/logs/lora_r8_train.jsonl

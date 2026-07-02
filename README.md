@@ -1,0 +1,53 @@
+# Qwen QLoRA Text-to-SQL Benchmark
+
+This repo is a reproducible Kaggle T4 project for QLoRA fine-tuning and serving benchmarks with `Qwen/Qwen2.5-1.5B-Instruct`.
+
+## Scope
+
+The first release answers three questions:
+
+1. Can QLoRA fine-tuning run reliably on Kaggle T4 for Qwen2.5-1.5B-Instruct?
+2. How do LoRA ranks 8, 16, and 32 affect Text-to-SQL quality, training time, and memory?
+3. How does vLLM base-model serving compare with Transformers on latency and throughput?
+
+## Experiment Design
+
+| Track | Tooling | Output |
+| --- | --- | --- |
+| baseline quality | Transformers | base model predictions and metrics |
+| fine-tuned quality | Transformers + PEFT | adapter predictions and metrics |
+| serving benchmark | vLLM and Transformers | latency and throughput tables |
+
+vLLM LoRA serving is not required for the first release.
+
+## Repository Layout
+
+```text
+configs/      YAML experiment configs
+data/         local data staging, ignored except directory markers
+docs/         project specs and experiment log
+notebooks/    Kaggle notebooks, one job per notebook
+outputs/      adapters, checkpoints, diagnostics
+results/      result tables, figures, logs, predictions
+scripts/      shell entrypoints for Kaggle
+src/          reusable Python package
+tests/        local validation tests
+```
+
+## Local Validation
+
+```bash
+uv run pytest
+uv run ruff check .
+```
+
+## Kaggle Setup
+
+```bash
+pip install -r requirements-kaggle.txt
+python -m qwen_qlora_sql_benchmark.utils
+```
+
+## Current Status
+
+Project scaffold is ready. Dataset selection and field inspection are the next step.

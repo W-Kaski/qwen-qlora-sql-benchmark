@@ -1,0 +1,12 @@
+data:
+  eval_path: data/splits/eval.jsonl
+generation:
+  max_new_tokens: 256
+  temperature: 0.0
+  top_p: 1.0
+metrics:
+  exact_match: true
+  sql_validity: true
+  execution_accuracy: false
+outputs:
+  summary_path: results/tables/eval_summary.csv

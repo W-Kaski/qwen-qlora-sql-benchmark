@@ -1,0 +1,15 @@
+experiment:
+  name: qwen25_15b_base_vllm_benchmark_v1
+model:
+  name: Qwen/Qwen2.5-1.5B-Instruct
+benchmark:
+  prompts_path: data/splits/benchmark_prompts.jsonl
+  max_new_tokens: 128
+  concurrency:
+    - 1
+    - 2
+    - 4
+  iterations: 20
+outputs:
+  raw_path: results/tables/serving_benchmark_raw.csv
+  summary_path: results/tables/serving_benchmark.csv
