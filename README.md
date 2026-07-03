@@ -99,6 +99,18 @@ curl -s http://127.0.0.1:8000/generate-sql \
 
 Sandbox execution accepts only one generated read-only `SELECT` statement and returns `execution_valid`, `row_count`, `rows`, and `execution_error`.
 
+Run the local demo:
+
+```bash
+scripts/run_local_demo.sh
+```
+
+Or, with the API already running:
+
+```bash
+scripts/demo_request.sh
+```
+
 ## Kaggle Setup
 
 ```bash
