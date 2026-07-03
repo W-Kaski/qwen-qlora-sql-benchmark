@@ -1,0 +1,31 @@
+id,tags,parse_valid,is_select_only,execution_valid,execution_match,latency_seconds,execution_error,prediction,reference_sql
+filter_country,filter,True,True,True,True,5.931182395994256,,"SELECT name FROM customers WHERE country = ""Canada""",SELECT name FROM customers WHERE country = 'Canada' ORDER BY name
+count_completed_orders,aggregation|filter,True,True,True,True,0.4238679379996029,,"SELECT COUNT(*) FROM orders WHERE status = ""completed""",SELECT COUNT(id) FROM orders WHERE status = 'completed'
+max_electronics_price,aggregation|filter,True,True,True,True,0.5027199079995626,,"SELECT MAX(price) FROM products WHERE category = ""electronics""",SELECT MAX(price) FROM products WHERE category = 'electronics'
+two_conditions_salary,filter|case_sensitive,True,True,True,False,0.7473288900000625,,"SELECT name FROM employees WHERE department = ""Engineering"" AND salary > 100000",SELECT name FROM employees WHERE department = 'engineering' AND salary > 100000
+order_limit_wins,order_by|limit,True,True,True,True,0.44422353400295833,,SELECT team FROM games ORDER BY wins DESC LIMIT 1,SELECT team FROM games ORDER BY wins DESC LIMIT 1
+join_author_books,join,True,True,True,False,0.7367827229973045,,"SELECT title FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = ""Alice"")",SELECT books.title FROM books JOIN authors ON books.author_id = authors.id WHERE authors.name = 'Alice' ORDER BY books.title
+group_count_by_region,group_by,True,True,True,False,0.42797699000220746,,"SELECT COUNT(*), region FROM sales GROUP BY region","SELECT region, COUNT(*) FROM sales GROUP BY region ORDER BY region"
+sum_by_region,group_by|aggregation,True,True,True,True,0.3930144999976619,,"SELECT region, SUM(amount) FROM sales GROUP BY region","SELECT region, SUM(amount) FROM sales GROUP BY region ORDER BY region"
+average_score_math,aggregation|filter,True,True,True,False,0.4563880470013828,,"SELECT AVG(score) FROM exams WHERE subject = ""Math""",SELECT AVG(score) FROM exams WHERE subject = 'math'
+between_years,filter|between,True,True,True,True,0.7465320830015116,,SELECT title FROM movies WHERE year > 2000 AND year < 2010,SELECT title FROM movies WHERE year BETWEEN 2000 AND 2010
+like_prefix,filter|like,True,True,True,False,0.4187027820007643,,"SELECT name FROM cities WHERE country = ""San""",SELECT name FROM cities WHERE name LIKE 'San%' ORDER BY name
+not_equal_status,filter,True,True,True,False,0.4852095120004378,,"SELECT MIN(id) FROM tickets WHERE status = ""closed""",SELECT id FROM tickets WHERE status != 'closed' ORDER BY id
+distinct_categories,distinct,True,True,True,False,0.21981488399615046,,SELECT DISTINCT item FROM inventory,SELECT DISTINCT category FROM inventory ORDER BY category
+min_temperature,aggregation,True,True,True,True,0.27072959899669513,,SELECT MIN(temperature) FROM weather,SELECT MIN(temperature) FROM weather
+limit_offset,order_by|limit,True,True,True,False,0.3898714460010524,,SELECT name FROM runners ORDER BY time_seconds LIMIT 2,SELECT name FROM runners ORDER BY time_seconds ASC LIMIT 1 OFFSET 1
+join_customer_orders,join|aggregation,True,True,True,True,0.8208604500032379,,"SELECT SUM(amount) FROM orders WHERE customer_id = (SELECT id FROM customers WHERE name = ""Alice"")",SELECT SUM(orders.amount) FROM orders JOIN customers ON orders.customer_id = customers.id WHERE customers.name = 'Alice'
+subquery_above_average,subquery,True,True,True,True,0.5750584930065088,,SELECT name FROM products WHERE price > (SELECT AVG(price) FROM products),SELECT name FROM products WHERE price > (SELECT AVG(price) FROM products)
+having_count,group_by|having,True,True,True,False,0.6187390920022153,,SELECT COUNT(*) FROM visits GROUP BY user_id HAVING COUNT(page) > 1,SELECT user_id FROM visits GROUP BY user_id HAVING COUNT(page) > 1
+date_filter,filter,True,True,True,True,0.7490996019987506,,"SELECT name FROM events WHERE event_date > ""2024-01-01""",SELECT name FROM events WHERE event_date > '2024-01-01'
+boolean_flag,filter,True,True,True,False,0.3480130809984985,,SELECT title FROM tasks WHERE completed = 1,SELECT title FROM tasks WHERE completed = 1 ORDER BY title
+case_sensitive_value,case_sensitive,True,True,True,False,0.4439719599977252,,"SELECT name FROM teams WHERE league = ""NBA""",SELECT name FROM teams WHERE league = 'nba'
+count_nulls,null_value,True,True,True,False,0.3483338440055377,,"SELECT COUNT(*) FROM profiles WHERE email = """"",SELECT COUNT(*) FROM profiles WHERE email IS NULL
+is_not_null,null_value,True,True,True,True,0.46742541500134394,,"SELECT name FROM profiles WHERE NOT email = ""None""",SELECT name FROM profiles WHERE email IS NOT NULL
+multiple_numeric_conditions,filter,True,True,True,True,0.7864273360028164,,SELECT model FROM cars WHERE year > 2020 AND price < 30000,SELECT model FROM cars WHERE year > 2020 AND price < 30000
+count_distinct,aggregation|distinct,True,True,True,True,0.4308958490000805,,SELECT COUNT(DISTINCT user_id) FROM logs,SELECT COUNT(DISTINCT user_id) FROM logs
+join_filter_category,join|filter,True,True,True,True,1.1816683989964076,,"SELECT T1.name FROM products AS T1 JOIN categories AS T2 ON T1.category_id = T2.id WHERE T2.label = ""food""",SELECT products.name FROM products JOIN categories ON products.category_id = categories.id WHERE categories.label = 'food' ORDER BY products.name
+group_order_limit,group_by|order_by|limit,True,True,True,True,0.6390863400010858,,SELECT customer FROM orders GROUP BY customer ORDER BY SUM(amount) DESC LIMIT 1,SELECT customer FROM orders GROUP BY customer ORDER BY SUM(amount) DESC LIMIT 1
+alias_projection,projection,True,True,True,True,0.6104224130031071,,"SELECT name AS 'player', points AS 'score' FROM athletes","SELECT name AS player, points AS score FROM athletes ORDER BY name"
+contains_text,filter|like,True,True,True,True,0.4073302840042743,,SELECT title FROM articles WHERE body LIKE '%SQL%',SELECT title FROM articles WHERE body LIKE '%SQL%'
+zero_rows,empty_result,True,True,True,True,0.3871450790029485,,"SELECT name FROM users WHERE country = ""France""",SELECT name FROM users WHERE country = 'France'

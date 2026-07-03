@@ -180,6 +180,14 @@ Deployment smoke test:
 
 See [docs/DEPLOYMENT_READINESS.md](docs/DEPLOYMENT_READINESS.md) for the deployment assessment.
 
+Deployment evaluation:
+
+| Cases | Parse Valid | Select-only | Execution Valid | Execution Accuracy | P50 Latency | P95 Latency |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 30 | 1.000 | 1.000 | 1.000 | 0.600 | 0.456s | 1.182s |
+
+See [docs/DEPLOYMENT_EVAL.md](docs/DEPLOYMENT_EVAL.md) for execution-backed deployment results.
+
 ## Figures
 
 ![Exact Match by Rank](results/figures/exact_match_by_rank.png)

@@ -35,6 +35,8 @@ Runtime:
 
 Detailed rows are stored in `results/tables/deployment_smoke_test.csv`.
 
+The larger deployment evaluation uses 30 SQLite-backed cases and reports 60.0% execution accuracy. See `docs/DEPLOYMENT_EVAL.md`.
+
 ## Observed Behavior
 
 The adapter reliably produced one SQL query and did not emit explanatory text in this smoke test. It improved the simple filtering case where the base model selected all columns instead of the requested column.
