@@ -8,7 +8,7 @@ Recommended Kaggle runtime:
 - Python GPU notebook
 - Internet enabled for Hugging Face model and dataset downloads
 
-This project does not require paid cloud GPU for the first release.
+The first release does not require paid cloud GPU.
 
 ## Notebook Order
 
@@ -20,7 +20,7 @@ Use one notebook per job:
 4. evaluation notebook for the same rank
 5. result export notebook or terminal cell
 
-The repository scripts are the canonical commands. Notebook cells should call these scripts instead of hardcoding training logic.
+The repository scripts are the run commands. Notebook cells call these scripts instead of duplicating training logic.
 
 ## Setup
 
@@ -116,7 +116,7 @@ Not tracked in GitHub:
 - checkpoints
 - local logs
 
-Kaggle outputs should be downloaded and copied into the same paths before regenerating result tables and figures.
+After a Kaggle run, download the outputs and copy them into the same paths before regenerating result tables and figures.
 
 ## T4 Risk Notes
 

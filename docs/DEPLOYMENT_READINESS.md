@@ -1,8 +1,8 @@
 # Deployment Readiness
 
-## Short Answer
+## Summary
 
-The current rank 32 adapter is suitable for a controlled Text-to-SQL demo where users provide a schema and ask single-query questions. It is not ready as a general public SQL assistant without guardrails, validation, and execution-based feedback.
+The rank 32 adapter works for scoped single-query Text-to-SQL demos with explicit schemas. It needs guardrails, validation, and execution feedback before broader user-facing use.
 
 ## Smoke Test Setup
 
@@ -49,16 +49,15 @@ SELECT name FROM employees WHERE department = "Engineering" AND salary > 100000
 
 The SQLite table contained `engineering`, so the generated query was syntactically valid but execution-incorrect under case-sensitive string comparison.
 
-## Deployment Assessment
+## Supported Use
 
-Good fit:
+Supported:
 
-- portfolio demo
 - internal demo with fixed schemas
 - batch evaluation workflow
 - controlled API where users pass explicit schema and natural-language question
 
-Not ready for:
+Unsupported:
 
 - arbitrary user-uploaded databases
 - production analytics workloads
@@ -66,7 +65,7 @@ Not ready for:
 - safety-critical data work
 - real customer deployment without query validation and sandboxing
 
-## Required Before Public Use
+## Required For Broader Use
 
 1. Add an execution-evaluation dataset with database files.
 2. Add a small API that validates generated SQL before returning it.
@@ -76,6 +75,6 @@ Not ready for:
 6. Add input contracts for schema size, supported SQL dialect, and unsupported requests.
 7. Add request logging that stores prompt length, latency, parse validity, and execution status.
 
-## Recommendation
+## Current Boundary
 
-The project should be presented as a reproducible QLoRA Text-to-SQL experiment and controlled demo, not as a production-ready SQL assistant. The next engineering step is to build a guarded local API with execution validation, then evaluate it on a database-backed Text-to-SQL benchmark.
+This repo is a reproducible QLoRA Text-to-SQL experiment with a guarded local API. It is not a production SQL assistant.

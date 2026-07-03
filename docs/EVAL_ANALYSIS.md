@@ -28,4 +28,4 @@ Rank 32 currently has the best Exact Match result, but the gap over rank 16 is m
 
 ## Limitations
 
-Exact Match rejects semantically equivalent SQL variants. SQL parse validity does not prove that the query executes against a database or returns the correct result. The current report should not claim real database execution correctness.
+Exact Match rejects semantically equivalent SQL variants. SQL parse validity does not prove that the query executes against a database or returns the correct result. Database execution correctness is reported only in the deployment evaluation.

@@ -96,9 +96,9 @@ Baseline shape checks:
 
 The baseline is not producing one fixed response. It generates prompt-specific SQL, usually using the supplied schema names and columns. Its main failure mode is exact query mismatch: wrong aggregation, wrong condition value, wrong operator, missing `OFFSET`, or adding unnecessary grouping.
 
-## Expected Fine-Tuning Effect
+## Fine-Tuning Effect
 
-QLoRA can plausibly improve:
+QLoRA improved:
 
 - SQL output format consistency.
 - Use of exact column names from schema.
@@ -114,4 +114,4 @@ QLoRA will not prove:
 
 ## Risk
 
-The dataset is useful for a first resource-constrained QLoRA experiment, but it is not enough by itself for a strong claim that the model is generally good at Text-to-SQL. The first release should describe the task as small-data schema-conditioned SQL generation, with Exact Match as the initial metric and Execution Accuracy as a later extension only after database execution is verified.
+The dataset is useful for a resource-constrained QLoRA experiment, but it does not support a broad claim about general Text-to-SQL ability. This release reports small-data schema-conditioned SQL generation with Exact Match, SQL validity, and a separate SQLite-backed deployment evaluation.

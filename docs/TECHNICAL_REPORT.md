@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project evaluates QLoRA fine-tuning for Text-to-SQL generation under a 16 GB GPU budget using `Qwen/Qwen2.5-1.5B-Instruct`.
+This report evaluates QLoRA fine-tuning for Text-to-SQL generation under a 16 GB GPU budget using `Qwen/Qwen2.5-1.5B-Instruct`.
 
 The experiment compares:
 
@@ -66,7 +66,7 @@ Rank 32 is the best Exact Match result in the current ablation. Rank 8 remains c
 | LoRA rank 16 | 0.696 | 0.154 | 0.136 | 0.004 |
 | LoRA rank 32 | 0.712 | 0.146 | 0.126 | 0.008 |
 
-The main baseline failure mode is filter or condition mismatch. QLoRA reduces this error type substantially, which supports the interpretation that the adapters learn dataset-specific query structure rather than only SQL syntax.
+The main baseline failure mode is filter or condition mismatch. The rank 32 adapter reduced this error type from 0.736 to 0.146.
 
 ## Training Runtime
 
@@ -89,7 +89,7 @@ This benchmark is a local single-request sanity check. It does not measure high-
 
 ## Key Findings
 
-1. QLoRA substantially improves Exact Match on this dataset.
+1. QLoRA increased Exact Match from 0.044 to 0.712 on this split.
 2. The base model already produces SQL-shaped output, so the main improvement is exact dataset-style query matching.
 3. Rank 32 performs best in Exact Match, but rank 8 is close and cheaper.
 4. vLLM lowers single-request latency in this local setup, while total tokens/s is similar for this sequential benchmark.

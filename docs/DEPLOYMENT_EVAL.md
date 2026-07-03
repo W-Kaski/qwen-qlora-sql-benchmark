@@ -2,7 +2,7 @@
 
 ## Scope
 
-This evaluation tests whether the rank 32 adapter behaves well enough for a controlled Text-to-SQL demo. Unlike Exact Match evaluation, each prediction is executed against an in-memory SQLite database and compared with the reference SQL execution result.
+This evaluation measures rank 32 adapter behavior on SQLite-backed Text-to-SQL cases. Unlike Exact Match evaluation, each prediction is executed against an in-memory SQLite database and compared with the reference SQL execution result.
 
 Evaluation set:
 
@@ -39,9 +39,9 @@ Detailed rows are stored in `results/tables/deployment_eval.csv`.
 
 ## Interpretation
 
-The adapter is reliable at producing parseable read-only SQL for this deployment-style set. All 30 generations were valid single-statement `SELECT` queries and all executed without SQLite errors.
+All 30 generations were valid single-statement `SELECT` queries and all executed without SQLite errors.
 
-The 60% execution accuracy shows that the adapter is not ready for open-ended user deployment. The remaining errors are semantic rather than syntactic:
+Execution accuracy was 60%. The remaining errors were semantic rather than syntactic:
 
 - case-sensitive value mismatch, such as `Engineering` vs `engineering`
 - selecting the wrong column, such as `item` instead of `category`
@@ -50,8 +50,8 @@ The 60% execution accuracy shows that the adapter is not ready for open-ended us
 - incomplete handling of `NULL`
 - `LIMIT/OFFSET` mistakes
 
-## Deployment Decision
+## Deployment Boundary
 
-This is enough for a portfolio demo with clear scope and validation metadata. It is not enough for a general SQL assistant where users expect reliable answers across arbitrary schemas.
+The current adapter is usable for a scoped local demo with explicit schemas and validation metadata. It is not accurate enough for arbitrary user databases.
 
-The next quality step is not another small LoRA rank run. The next step should use an execution-backed benchmark and add value normalization, dialect constraints, and richer training examples for joins, grouping, null handling, and string predicates.
+The next quality pass needs execution-backed training and evaluation data, value normalization, dialect constraints, and more examples for joins, grouping, null handling, and string predicates.
