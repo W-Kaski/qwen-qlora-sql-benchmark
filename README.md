@@ -58,6 +58,27 @@ uv run --extra dev pytest
 uv run --extra dev ruff check .
 ```
 
+## Guarded Local API
+
+The API exposes a local Text-to-SQL service with parse validation and read-only `SELECT` checks.
+
+```bash
+scripts/run_api.sh
+```
+
+Example request:
+
+```bash
+curl -s http://127.0.0.1:8000/generate-sql \
+  -H 'content-type: application/json' \
+  -d '{
+    "schema": "CREATE TABLE users (name TEXT, country TEXT)",
+    "question": "List user names from Canada"
+  }'
+```
+
+The response includes `sql`, `parse_valid`, `is_select_only`, `latency_ms`, and `error`. The API still requires the local adapter artifacts under `outputs/adapters/lora_r32` for real generation.
+
 ## Kaggle Setup
 
 ```bash
