@@ -1,0 +1,13 @@
+model,case,parse_valid,execution_match,latency_seconds,error,prediction
+base,simple_filter,true,false,0.676,,SELECT * FROM customers WHERE country = 'Canada'
+base,count_aggregation,true,true,0.221,,SELECT COUNT(*) FROM orders WHERE status = 'completed'
+base,max_aggregation,true,true,0.296,,SELECT MAX(price) FROM products WHERE category = 'electronics'
+base,two_conditions,true,false,0.457,,SELECT name FROM employees WHERE department = 'Engineering' AND salary > 100000;
+base,order_limit,true,true,0.265,,SELECT team FROM games ORDER BY wins DESC LIMIT 1;
+base,join_lookup,true,true,0.427,,SELECT title FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = 'Alice')
+lora_r32,simple_filter,true,true,0.417,,SELECT name FROM customers WHERE country = "Canada"
+lora_r32,count_aggregation,true,true,0.520,,SELECT COUNT(*) FROM orders WHERE status = "completed"
+lora_r32,max_aggregation,true,true,0.493,,SELECT MAX(price) FROM products WHERE category = "electronics"
+lora_r32,two_conditions,true,false,0.761,,SELECT name FROM employees WHERE department = "Engineering" AND salary > 100000
+lora_r32,order_limit,true,true,0.458,,SELECT team FROM games ORDER BY wins DESC LIMIT 1
+lora_r32,join_lookup,true,true,0.779,,SELECT title FROM books WHERE author_id IN (SELECT id FROM authors WHERE name = "Alice")

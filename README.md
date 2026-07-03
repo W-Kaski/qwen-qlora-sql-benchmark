@@ -130,6 +130,15 @@ Error analysis:
 
 See [docs/ERROR_ANALYSIS.md](docs/ERROR_ANALYSIS.md) for the classification method and limitations.
 
+Deployment smoke test:
+
+| Model | Cases | Parse Valid | Execution Match | Average Latency |
+| --- | ---: | ---: | ---: | ---: |
+| base model | 6 | 6 | 4 | 0.390s |
+| LoRA rank 32 | 6 | 6 | 5 | 0.571s |
+
+See [docs/DEPLOYMENT_READINESS.md](docs/DEPLOYMENT_READINESS.md) for the deployment assessment.
+
 ## Figures
 
 ![Exact Match by Rank](results/figures/exact_match_by_rank.png)
