@@ -164,7 +164,15 @@ scripts/kaggle_prepare_dataset.sh
 
 Full runbook: [docs/KAGGLE_REPRODUCTION.md](docs/KAGGLE_REPRODUCTION.md)
 
-Current note: the reported full training runs were produced on local WSL GPU. Kaggle scripts are prepared for T4 reproduction; a Kaggle validation run is tracked separately.
+Kaggle validation:
+
+- kernel: `ericwang7717/qwen-qlora-sql-validation`
+- version: 3
+- status: complete
+- checks: `pytest`, `ruff`, dataset preparation, runtime snapshot
+- GPU runtime: confirmed with `nvidia-smi`
+
+Current note: the reported full training runs were produced on local WSL GPU. Kaggle validation covers setup, tests, lint, data preparation, and GPU runtime availability; it does not run the full QLoRA training job.
 
 ## Hugging Face
 

@@ -10,6 +10,32 @@ Recommended Kaggle runtime:
 
 The first release does not require paid cloud GPU.
 
+## Validation Run
+
+Kaggle validation has been run through:
+
+- kernel: `ericwang7717/qwen-qlora-sql-validation`
+- version: 3
+- status: complete
+- URL: `https://www.kaggle.com/code/ericwang7717/qwen-qlora-sql-validation`
+
+Validated steps:
+
+- GitHub repo clone
+- GPU runtime availability through `nvidia-smi`
+- `uv run --extra dev pytest`
+- `uv run --extra dev ruff check .`
+- dataset preparation with `qwen_qlora_sql_benchmark.data.download_sql_create_context`
+- runtime snapshot command
+
+Observed Kaggle validation result:
+
+- tests: 55 passed
+- lint: all checks passed
+- status file: `KAGGLE_VALIDATION_OK`
+
+The validation run does not execute full QLoRA training. Full rank training remains the expensive Kaggle path described below.
+
 ## Notebook Order
 
 Use one notebook per job:

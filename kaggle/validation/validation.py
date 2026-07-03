@@ -3,7 +3,8 @@ import subprocess
 from pathlib import Path
 
 REPO_URL = "https://github.com/W-Kaski/qwen-qlora-sql-benchmark.git"
-WORKDIR = Path("/kaggle/working/qwen-qlora-sql-benchmark")
+WORKDIR = Path("/tmp/qwen-qlora-sql-benchmark")
+STATUS_PATH = Path("/kaggle/working/kaggle_validation_status.txt")
 
 
 def run(command: list[str], cwd: Path | None = None) -> None:
@@ -16,6 +17,7 @@ def main() -> None:
     if not WORKDIR.exists():
         run(["git", "clone", "--depth", "1", REPO_URL, str(WORKDIR)])
 
+    run(["nvidia-smi"])
     run(["python", "-m", "pip", "install", "-U", "uv"])
     run(["uv", "run", "--extra", "dev", "pytest"], cwd=WORKDIR)
     run(["uv", "run", "--extra", "dev", "ruff", "check", "."], cwd=WORKDIR)
@@ -32,6 +34,7 @@ def main() -> None:
         cwd=WORKDIR,
     )
     run(["uv", "run", "python", "-m", "qwen_qlora_sql_benchmark.utils"], cwd=WORKDIR)
+    STATUS_PATH.write_text("KAGGLE_VALIDATION_OK\n", encoding="utf-8")
     print("KAGGLE_VALIDATION_OK", flush=True)
 
 
