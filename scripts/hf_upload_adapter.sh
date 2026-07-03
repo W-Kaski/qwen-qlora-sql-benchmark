@@ -26,9 +26,20 @@ cleanup() {
 }
 trap cleanup EXIT
 
-cp -R "${adapter_dir}/." "${work_dir}/"
+for file_name in \
+  adapter_config.json \
+  adapter_model.safetensors \
+  added_tokens.json \
+  chat_template.jinja \
+  merges.txt \
+  special_tokens_map.json \
+  tokenizer.json \
+  tokenizer_config.json \
+  vocab.json; do
+  cp "${adapter_dir}/${file_name}" "${work_dir}/${file_name}"
+done
 cp "${model_card_dir}/README.md" "${work_dir}/README.md"
 
-hf upload "${repo_id}" "${work_dir}" . \
+hf upload-large-folder "${repo_id}" "${work_dir}" \
   --repo-type model \
-  --commit-message "Upload Qwen2.5 Text-to-SQL LoRA adapter"
+  --num-workers 4

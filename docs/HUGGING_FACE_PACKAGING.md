@@ -2,12 +2,13 @@
 
 ## Status
 
-Packaging files are ready. The local Hugging Face CLI is logged in as `W-Kaski`, but adapter upload returned `403 Forbidden` when creating `W-Kaski/qwen25-15b-text2sql-lora-r32`.
+Adapter packaging is uploaded to:
 
-Current blocker:
+```text
+https://huggingface.co/W-Kaski/qwen25-15b-text2sql-lora-r32
+```
 
-- the active Hugging Face token does not have permission to create a model repo under the `W-Kaski` namespace, or
-- the target namespace/repo id needs to be changed.
+The uploaded repo contains the final adapter, tokenizer files, and model card. Training checkpoints and optimizer state are intentionally excluded.
 
 Check auth without exposing tokens:
 
@@ -25,7 +26,7 @@ model_cards/qwen25-15b-text2sql-lora-r32/README.md
 
 ## Upload
 
-After logging in locally with a token that has write access:
+To re-upload after retraining:
 
 ```bash
 HF_REPO_ID=W-Kaski/qwen25-15b-text2sql-lora-r32 scripts/hf_upload_adapter.sh

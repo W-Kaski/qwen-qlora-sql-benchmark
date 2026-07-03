@@ -176,9 +176,9 @@ Current note: the reported full training runs were produced on local WSL GPU. Ka
 
 ## Hugging Face
 
-Adapter packaging assets are under `model_cards/`.
+Rank 32 adapter: [W-Kaski/qwen25-15b-text2sql-lora-r32](https://huggingface.co/W-Kaski/qwen25-15b-text2sql-lora-r32)
 
-Upload after local HF login:
+Adapter packaging assets are under `model_cards/`. Re-upload after retraining:
 
 ```bash
 HF_REPO_ID=W-Kaski/qwen25-15b-text2sql-lora-r32 scripts/hf_upload_adapter.sh
