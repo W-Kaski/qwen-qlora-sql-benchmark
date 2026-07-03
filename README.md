@@ -79,6 +79,26 @@ curl -s http://127.0.0.1:8000/generate-sql \
 
 The response includes `sql`, `parse_valid`, `is_select_only`, `latency_ms`, and `error`. The API still requires the local adapter artifacts under `outputs/adapters/lora_r32` for real generation.
 
+Optional SQLite sandbox execution:
+
+```bash
+curl -s http://127.0.0.1:8000/generate-sql \
+  -H 'content-type: application/json' \
+  -d '{
+    "schema": "CREATE TABLE users (name TEXT, country TEXT)",
+    "question": "List user names from Canada",
+    "execute": true,
+    "setup_sql": [
+      "CREATE TABLE users (name TEXT, country TEXT)",
+      "INSERT INTO users VALUES (\"Alice\", \"Canada\")"
+    ],
+    "max_rows": 20,
+    "timeout_ms": 1000
+  }'
+```
+
+Sandbox execution accepts only one generated read-only `SELECT` statement and returns `execution_valid`, `row_count`, `rows`, and `execution_error`.
+
 ## Kaggle Setup
 
 ```bash

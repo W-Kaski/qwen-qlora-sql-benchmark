@@ -75,3 +75,28 @@ def test_generate_sql_rejects_blank_schema() -> None:
     )
 
     assert response.status_code == 422
+
+
+def test_generate_sql_can_execute_in_sqlite_sandbox() -> None:
+    from fastapi.testclient import TestClient
+
+    client = TestClient(create_app(generator=StaticGenerator("SELECT name FROM users")))
+
+    response = client.post(
+        "/generate-sql",
+        json={
+            "schema": "CREATE TABLE users (name TEXT)",
+            "question": "List all user names",
+            "execute": True,
+            "setup_sql": [
+                "CREATE TABLE users (name TEXT)",
+                "INSERT INTO users VALUES ('Alice')",
+            ],
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["execution"]["execution_valid"] is True
+    assert payload["execution"]["row_count"] == 1
+    assert payload["execution"]["rows"] == [["Alice"]]
