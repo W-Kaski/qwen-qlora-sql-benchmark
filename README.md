@@ -119,6 +119,8 @@ scripts/kaggle_setup_check.sh
 scripts/kaggle_prepare_dataset.sh
 ```
 
+Full Kaggle reproduction guide: [docs/KAGGLE_REPRODUCTION.md](docs/KAGGLE_REPRODUCTION.md)
+
 ## Current Status
 
 Project scaffold is ready. The first dataset is `b-mc2/sql-create-context`; exact fields have been verified as `answer`, `question`, and `context`.
