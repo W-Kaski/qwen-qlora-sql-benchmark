@@ -57,6 +57,17 @@ All experiment parameters are stored in YAML configs under `configs/`.
 
 Rank 32 is the best Exact Match result in the current ablation. Rank 8 remains competitive and has fewer LoRA parameters.
 
+## Error Analysis
+
+| Model | Exact Match | Filter/Condition Mismatch | Projection Mismatch | Invalid SQL |
+| --- | ---: | ---: | ---: | ---: |
+| baseline | 0.044 | 0.736 | 0.182 | 0.020 |
+| LoRA rank 8 | 0.684 | 0.164 | 0.132 | 0.006 |
+| LoRA rank 16 | 0.696 | 0.154 | 0.136 | 0.004 |
+| LoRA rank 32 | 0.712 | 0.146 | 0.126 | 0.008 |
+
+The main baseline failure mode is filter or condition mismatch. QLoRA reduces this error type substantially, which supports the interpretation that the adapters learn dataset-specific query structure rather than only SQL syntax.
+
 ## Training Runtime
 
 | Rank | Train rows | Eval rows | Wall time | Final eval loss |

@@ -26,6 +26,17 @@ Full technical writeup: [docs/TECHNICAL_REPORT.md](docs/TECHNICAL_REPORT.md)
 
 See [docs/DATASET_ANALYSIS.md](docs/DATASET_ANALYSIS.md) for split statistics, SQL pattern distribution, and baseline failure modes.
 
+## Key Results
+
+| Model | Exact Match | SQL Parse Valid | Main Remaining Error |
+| --- | ---: | ---: | --- |
+| baseline | 0.044 | 0.980 | filter or condition mismatch |
+| LoRA rank 8 | 0.684 | 0.992 | filter or condition mismatch |
+| LoRA rank 16 | 0.696 | 0.994 | filter or condition mismatch |
+| LoRA rank 32 | 0.712 | 0.990 | filter or condition mismatch |
+
+The fine-tuned adapters improve Exact Match from 4.4% to 71.2% on the 500-row eval split. The base model is already SQL-shaped, so the measured gain is mainly in matching dataset-specific query structure, selected columns, and filters.
+
 ## Repository Layout
 
 ```text
@@ -51,7 +62,8 @@ uv run --extra dev ruff check .
 
 ```bash
 pip install -r requirements-kaggle.txt
-python -m qwen_qlora_sql_benchmark.utils
+scripts/kaggle_setup_check.sh
+scripts/kaggle_prepare_dataset.sh
 ```
 
 ## Current Status
@@ -106,6 +118,17 @@ Quality metrics:
 | LoRA rank 32 | 0.712 | 0.990 |
 
 See [docs/EVAL_ANALYSIS.md](docs/EVAL_ANALYSIS.md) for interpretation and limitations.
+
+Error analysis:
+
+| Model | Exact Match | Filter/Condition Mismatch | Projection Mismatch | Invalid SQL |
+| --- | ---: | ---: | ---: | ---: |
+| baseline | 0.044 | 0.736 | 0.182 | 0.020 |
+| LoRA rank 8 | 0.684 | 0.164 | 0.132 | 0.006 |
+| LoRA rank 16 | 0.696 | 0.154 | 0.136 | 0.004 |
+| LoRA rank 32 | 0.712 | 0.146 | 0.126 | 0.008 |
+
+See [docs/ERROR_ANALYSIS.md](docs/ERROR_ANALYSIS.md) for the classification method and limitations.
 
 ## Figures
 
