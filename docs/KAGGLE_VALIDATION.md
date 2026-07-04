@@ -51,7 +51,7 @@ pip install -r requirements-kaggle.txt
 Run setup check:
 
 ```bash
-scripts/kaggle_setup_check.sh
+scripts/kaggle_validate_environment.sh
 ```
 
 Expected setup output includes the Python version, CUDA availability, GPU name,
@@ -73,15 +73,17 @@ The source dataset fields are `answer`, `question`, and `context`.
 
 ## Full Training Path
 
-Full rank ablation commands:
+The reported full rank-ablation results were produced on a local WSL GPU, not
+by the completed Kaggle validation run. The same training and evaluation
+entrypoints can be used on Kaggle after environment validation:
 
 ```bash
-scripts/kaggle_train_r8.sh
-scripts/kaggle_eval_r8.sh
-scripts/kaggle_train_r16.sh
-scripts/kaggle_eval_r16.sh
-scripts/kaggle_train_r32.sh
-scripts/kaggle_eval_r32.sh
+scripts/train_r8.sh
+scripts/eval_r8.sh
+scripts/train_r16.sh
+scripts/eval_r16.sh
+scripts/train_r32.sh
+scripts/eval_r32.sh
 ```
 
 Expected adapter outputs:

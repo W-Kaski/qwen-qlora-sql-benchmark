@@ -28,7 +28,7 @@
 ### 2026-07-02 baseline-generation-scaffold
 
 - Config: `configs/train_baseline.yaml`
-- Command: `scripts/kaggle_baseline.sh`
+- Command: `scripts/baseline_generate.sh`
 - Local validation: generated a two-row synthetic prediction file from `data/splits/eval.jsonl`
 - Local score check: `count=2`, `exact_match=0.5`
 - Observations: baseline script writes raw predictions before Exact Match scoring
@@ -225,4 +225,4 @@
 - Baseline on same 500 rows: `exact_match=0.044`
 - Rank 8 on same 500 rows: `exact_match=0.684`
 - Rank 16 on same 500 rows: `exact_match=0.696`
-- Decision: rank 32 is the best Exact Match result so far; proceed to metric and report cleanup
+- Decision: rank 32 has the highest Exact Match result in this single-seed run so far; proceed to metric and report cleanup

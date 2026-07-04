@@ -60,9 +60,9 @@ python -m qwen_qlora_sql_benchmark.train.train_qlora --config <config>
 Convenience scripts:
 
 ```bash
-scripts/kaggle_train_r8.sh
-scripts/kaggle_train_r16.sh
-scripts/kaggle_train_r32.sh
+scripts/train_r8.sh
+scripts/train_r16.sh
+scripts/train_r32.sh
 ```
 
 Expected adapter directories:
@@ -82,15 +82,15 @@ value to Transformers `set_seed`, `TrainingArguments.seed`, and
 Run baseline generation:
 
 ```bash
-scripts/kaggle_baseline.sh
+scripts/baseline_generate.sh
 ```
 
 Run adapter evaluation:
 
 ```bash
-scripts/kaggle_eval_r8.sh
-scripts/kaggle_eval_r16.sh
-scripts/kaggle_eval_r32.sh
+scripts/eval_r8.sh
+scripts/eval_r16.sh
+scripts/eval_r32.sh
 ```
 
 Post-process prediction files:
@@ -117,7 +117,7 @@ Raw prediction JSONL files are not tracked in Git.
 Generation configs set `generation.seed: 42`. Baseline and adapter generation
 pass this value to Transformers `set_seed` before loading the model.
 
-## SQLite Execution Check
+## Controlled SQLite Execution Sanity Check
 
 Run:
 
@@ -134,13 +134,14 @@ Outputs:
 - `results/tables/execution_eval.csv`
 - `results/tables/execution_eval_summary.csv`
 
-This check uses 30 SQLite-backed cases and in-memory databases. It is a small
-execution sanity check, not a broad deployment benchmark.
+This check uses 30 manually curated SQLite-backed cases and in-memory databases.
+It is a small execution sanity check, not a held-out benchmark or broad
+deployment benchmark.
 
 The execution helper restricts setup SQL to single `CREATE TABLE` or `INSERT`
 statements and restricts generated SQL to one read-only `SELECT`.
 
-## Serving Sanity Check
+## Single-Request Serving Sanity Check
 
 Run:
 
@@ -167,7 +168,7 @@ uv run --extra dev ruff check .
 
 Current validation status:
 
-- `56 passed`
+- `66 passed`
 - `ruff check .`: all checks passed
 
 ## Known Gaps

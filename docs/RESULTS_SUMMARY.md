@@ -11,7 +11,9 @@
 
 ## Interpretation
 
-All LoRA ranks improved Exact Match over the base model. Rank 32 is currently best on Exact Match, while rank 8 is close and remains the lower-parameter setting.
+All LoRA ranks improved Exact Match over the base model. In this single-seed
+500-example split, rank 32 had the highest Exact Match; the gain over rank 16
+was modest. Rank 8 remains a strong lower-parameter setting.
 
 The SQL parse-validity rate is high even for the baseline, which means this experiment is not mainly about teaching SQL syntax. The fine-tuning gain is mostly in matching the dataset's preferred query structure and exact output format.
 

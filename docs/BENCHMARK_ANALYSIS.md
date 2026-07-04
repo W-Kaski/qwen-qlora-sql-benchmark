@@ -1,4 +1,4 @@
-# Benchmark Analysis
+# Single-Request Serving Sanity Check
 
 ## Scope
 
@@ -28,4 +28,5 @@ vLLM has lower P50 and P95 latency in this single-request test. Total tokens per
 - No LoRA serving benchmark in the first release.
 - No TTFT instrumentation yet.
 
-This benchmark is a base-model serving sanity check, not a full production serving study.
+This benchmark is a base-model single-request serving sanity check, not a full
+production serving study.

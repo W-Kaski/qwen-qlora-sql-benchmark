@@ -3,12 +3,18 @@
 Reproducible QLoRA fine-tuning and evaluation for
 `Qwen/Qwen2.5-1.5B-Instruct` on `b-mc2/sql-create-context`.
 
-This repository focuses on the ML engineering loop around a small Text-to-SQL
-experiment: dataset conversion, YAML-managed QLoRA training, LoRA rank
-ablation, exact-match evaluation, SQL parse checks, error analysis, result
-plots, and a local FastAPI demo with SQL validation.
+This repository evaluates parameter-efficient adaptation for constrained
+schema-conditioned SQL generation. It covers dataset conversion, YAML-managed
+QLoRA training, LoRA rank ablation, exact-match evaluation, SQL parse checks,
+error analysis, result plots, and a local FastAPI demo with SQL validation.
 
 It is not a production SQL assistant.
+
+## Result Provenance
+
+Full rank-ablation results were produced on a local WSL GPU. Kaggle validation
+covers environment setup, tests, lint, dataset preparation, and GPU runtime
+availability, not the reported full training runs.
 
 ## Results
 
@@ -21,10 +27,11 @@ Evaluation split: 500 examples.
 | LoRA rank 16 | 0.696 | 0.994 | filter / condition mismatch |
 | LoRA rank 32 | 0.712 | 0.990 | filter / condition mismatch |
 
-The rank 32 adapter improved Exact Match from `0.044` to `0.712`. The base
-model already produced parseable SQL most of the time, so the main gain came
-from better column selection, filter construction, aggregation choice, and
-dataset-specific SQL formatting.
+In this single-seed 500-example split, rank 32 achieved the highest Exact Match;
+the incremental gain over rank 16 was modest. The base model already produced
+parseable SQL most of the time, so the main gain came from better column
+selection, filter construction, aggregation choice, and dataset-specific SQL
+formatting.
 
 ## Method
 
@@ -51,11 +58,13 @@ LoRA parameter scale:
 | 16 | 18,464,768 | 1.028% |
 | 32 | 36,929,536 | 2.036% |
 
-## Execution Check
+## Controlled SQLite Execution Sanity Check
 
 The repository includes a small SQLite-backed execution check for the rank 32
 adapter. It executes generated SQL against in-memory SQLite databases and
 compares the result with reference SQL execution.
+
+The 30 cases are manually curated and are not a held-out benchmark.
 
 | Cases | Parse Valid | Select-only | Execution Valid | Execution Accuracy | P50 Latency | P95 Latency |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -65,7 +74,7 @@ This is a small execution sanity check, not a broad Text-to-SQL benchmark. The
 main remaining failures are value normalization, wrong projection, string
 predicates, `NULL`, `GROUP BY`, and `LIMIT/OFFSET`.
 
-## Serving Sanity Check
+## Single-Request Serving Sanity Check
 
 Base model, sequential single-request benchmark:
 
@@ -94,12 +103,12 @@ uv run --extra data python -m qwen_qlora_sql_benchmark.data.download_sql_create_
 Run rank training and evaluation:
 
 ```bash
-scripts/kaggle_train_r8.sh
-scripts/kaggle_eval_r8.sh
-scripts/kaggle_train_r16.sh
-scripts/kaggle_eval_r16.sh
-scripts/kaggle_train_r32.sh
-scripts/kaggle_eval_r32.sh
+scripts/train_r8.sh
+scripts/eval_r8.sh
+scripts/train_r16.sh
+scripts/eval_r16.sh
+scripts/train_r32.sh
+scripts/eval_r32.sh
 ```
 
 Post-process results:
@@ -195,7 +204,7 @@ uv run --extra dev ruff check .
 
 Latest local validation:
 
-- `56 passed`
+- `66 passed`
 - `ruff check .`: all checks passed
 
 ## Reports

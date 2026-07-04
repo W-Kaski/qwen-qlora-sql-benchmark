@@ -69,7 +69,9 @@ configs.
 | LoRA rank 16 | 0.696 | 0.994 |
 | LoRA rank 32 | 0.712 | 0.990 |
 
-Rank 32 is the best Exact Match result in the current ablation. Rank 8 remains competitive and has fewer LoRA parameters.
+In this single-seed run, rank 32 had the highest Exact Match. The incremental
+gain over rank 16 was modest, so the rank comparison should be treated as
+directional until multi-seed results are available.
 
 ## Error Analysis
 
@@ -92,7 +94,7 @@ The main baseline failure mode is filter or condition mismatch. The rank 32 adap
 
 Run metadata is stored in `results/tables/run_metadata.csv`.
 
-## Serving Benchmark
+## Single-Request Serving Sanity Check
 
 Base model serving benchmark:
 
@@ -107,7 +109,9 @@ This benchmark is a local single-request sanity check. It does not measure high-
 
 1. QLoRA increased Exact Match from 0.044 to 0.712 on this split.
 2. The base model already produces SQL-shaped output, so the main improvement is exact dataset-style query matching.
-3. Rank 32 performs best in Exact Match, but rank 8 is close and cheaper.
+3. Rank 32 had the highest Exact Match in this single-seed run, while the rank
+   gaps are small enough that multi-seed runs are needed before making a
+   stability claim.
 4. vLLM lowers single-request latency in this local setup, while total tokens/s is similar for this sequential benchmark.
 
 ## Limitations
@@ -118,6 +122,7 @@ This benchmark is a local single-request sanity check. It does not measure high-
 - No database execution files are included in the current split.
 - vLLM LoRA serving is not part of the first release.
 - Kaggle validation has setup scripts and runtime checks, but the reported full runs were local WSL GPU runs.
+- Rank comparisons are based on one seed and should be treated as directional.
 
 ## Reproduction
 
@@ -126,7 +131,7 @@ uv run --extra data python -m qwen_qlora_sql_benchmark.data.download_sql_create_
 scripts/local_train_r8_diagnostic.sh
 scripts/local_eval_r8_diagnostic.sh
 PYTHONPATH=src python3 -m qwen_qlora_sql_benchmark.train.train_qlora --config configs/train_lora_r8.yaml
-scripts/local_eval_r8.sh
+scripts/eval_r8.sh
 scripts/score_quality_metrics.sh
 scripts/run_serving_benchmark.sh
 scripts/plot_results.sh

@@ -24,7 +24,9 @@ Execution Accuracy is not reported because this dataset split does not include e
 
 The base model already generates SQL-shaped output consistently: every baseline prediction starts with `SELECT`, and the parse-valid rate is 0.980. QLoRA therefore does not mainly teach the model to produce SQL syntax. The improvement is in matching this dataset's expected query structure, selected columns, aggregation choices, filters, and SQL style.
 
-Rank 32 currently has the best Exact Match result, but the gap over rank 16 is modest. Rank 8 remains a strong lower-cost setting.
+Rank 32 has the highest Exact Match in this single-seed split, but the gap over
+rank 16 is modest. Rank 8 remains a strong lower-cost setting. Multi-seed runs
+are needed before making a stability claim about rank ordering.
 
 ## Limitations
 
