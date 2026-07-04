@@ -107,11 +107,11 @@ QLoRA improved:
 
 QLoRA will not prove:
 
-- robust real-world Text-to-SQL generalization;
+- arbitrary real-world Text-to-SQL generalization;
 - database execution correctness without executable database files;
 - strong multi-table reasoning, because joins are rare in this split;
 - semantic equivalence when Exact Match rejects equivalent SQL variants.
 
 ## Risk
 
-The dataset is useful for a resource-constrained QLoRA experiment, but it does not support a broad claim about general Text-to-SQL ability. This release reports small-data schema-conditioned SQL generation with Exact Match, SQL validity, and a separate SQLite-backed deployment evaluation.
+The dataset is useful for a resource-constrained QLoRA experiment, but it does not support a broad claim about general Text-to-SQL ability. This release reports small-data schema-conditioned SQL generation with Exact Match, SQL validity, and a separate SQLite-backed execution evaluation.

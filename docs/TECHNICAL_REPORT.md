@@ -43,8 +43,22 @@ The training setup uses:
 - LoRA ranks 8, 16, and 32
 - 1 epoch over 5000 train rows
 - 500-row eval split
+- training and generation seed 42
 
 All experiment parameters are stored in YAML configs under `configs/`.
+
+## Parameter Scale
+
+| Rank | Trainable Parameters | Total Parameters With Adapter | Trainable Percent |
+| ---: | ---: | ---: | ---: |
+| 8 | 9,232,384 | 1,786,320,384 | 0.517% |
+| 16 | 18,464,768 | 1,795,552,768 | 1.028% |
+| 32 | 36,929,536 | 1,814,017,536 | 2.036% |
+
+Counts are stored in `results/tables/parameter_count.csv`. They were computed
+from `Qwen/Qwen2.5-1.5B-Instruct` config using empty-weight model
+initialization, then applying the same PEFT LoRA target modules as the training
+configs.
 
 ## Quality Results
 
@@ -76,6 +90,8 @@ The main baseline failure mode is filter or condition mismatch. The rank 32 adap
 | 16 | 5000 | 500 | 1132.98s | 0.0537 |
 | 32 | 5000 | 500 | 1077.81s | 0.0498 |
 
+Run metadata is stored in `results/tables/run_metadata.csv`.
+
 ## Serving Benchmark
 
 Base model serving benchmark:
@@ -101,7 +117,7 @@ This benchmark is a local single-request sanity check. It does not measure high-
 - The dataset is mostly single-table SQL.
 - No database execution files are included in the current split.
 - vLLM LoRA serving is not part of the first release.
-- Kaggle reproduction has setup scripts, but the reported full runs were local WSL GPU runs.
+- Kaggle validation has setup scripts and runtime checks, but the reported full runs were local WSL GPU runs.
 
 ## Reproduction
 

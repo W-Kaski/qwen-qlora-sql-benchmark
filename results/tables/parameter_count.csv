@@ -1,0 +1,4 @@
+model,rank,lora_alpha,lora_dropout,target_modules,trainable_parameters,total_parameters,trainable_percent,count_method
+Qwen/Qwen2.5-1.5B-Instruct,8,16,0.05,"q_proj;k_proj;v_proj;o_proj;gate_proj;up_proj;down_proj",9232384,1786320384,0.5168380813819342,transformers_auto_config_with_empty_weights
+Qwen/Qwen2.5-1.5B-Instruct,16,32,0.05,"q_proj;k_proj;v_proj;o_proj;gate_proj;up_proj;down_proj",18464768,1795552768,1.0283612004657053,transformers_auto_config_with_empty_weights
+Qwen/Qwen2.5-1.5B-Instruct,32,64,0.05,"q_proj;k_proj;v_proj;o_proj;gate_proj;up_proj;down_proj",36929536,1814017536,2.0357871556981463,transformers_auto_config_with_empty_weights

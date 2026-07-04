@@ -5,7 +5,7 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
-from qwen_qlora_sql_benchmark.api.sql_validation import is_select_only
+from qwen_qlora_sql_benchmark.api.sql_validation import is_allowed_setup_statement, is_select_only
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,15 @@ def execute_select_query(
     try:
         cursor = connection.cursor()
         for statement in setup_sql:
+            if not is_allowed_setup_statement(statement):
+                return SqlExecutionResult(
+                    execution_valid=False,
+                    row_count=0,
+                    rows=[],
+                    execution_error=(
+                        "setup_sql allows only single CREATE TABLE or INSERT statements"
+                    ),
+                )
             cursor.execute(statement)
         cursor.execute(sql)
         rows = [list(row) for row in cursor.fetchmany(max_rows)]

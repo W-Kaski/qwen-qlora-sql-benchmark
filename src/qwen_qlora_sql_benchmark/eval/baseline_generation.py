@@ -29,6 +29,8 @@ def load_eval_records(path: Path) -> list[EvalRecord]:
                     raise KeyError(f"{path}:{line_number + 1}.{key}")
                 if not isinstance(payload[key], str):
                     raise TypeError(f"{path}:{line_number + 1}.{key} must be a string")
+                if not payload[key].strip():
+                    raise ValueError(f"{path}:{line_number + 1}.{key} must not be blank")
             records.append(
                 EvalRecord(
                     id=str(line_number),
@@ -68,10 +70,12 @@ def generate_with_transformers(
     max_new_tokens: int,
     temperature: float,
     top_p: float,
+    seed: int,
 ) -> list[dict[str, str]]:
     import torch
-    from transformers import AutoModelForCausalLM, AutoTokenizer
+    from transformers import AutoModelForCausalLM, AutoTokenizer, set_seed
 
+    set_seed(seed)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
@@ -111,6 +115,7 @@ def main() -> None:
         [
             "model.name",
             "data.eval_path",
+            "generation.seed",
             "generation.max_new_tokens",
             "generation.temperature",
             "generation.top_p",
@@ -125,6 +130,7 @@ def main() -> None:
         max_new_tokens=int(config["generation"]["max_new_tokens"]),
         temperature=float(config["generation"]["temperature"]),
         top_p=float(config["generation"]["top_p"]),
+        seed=int(config["generation"]["seed"]),
     )
     write_prediction_records(Path(config["outputs"]["predictions_path"]), predictions)
 

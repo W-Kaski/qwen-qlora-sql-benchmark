@@ -1,0 +1,4 @@
+experiment,model,rank,train_rows,eval_rows,max_seq_length,learning_rate,lora_alpha,lora_dropout,seed,quantization,epochs,wall_time_seconds,final_eval_loss,hardware_environment
+qwen25_15b_text2sql_r8a16_lr1e4_v1,Qwen/Qwen2.5-1.5B-Instruct,8,5000,500,1024,0.0001,16,0.05,42,4-bit NF4,1,1095.10,0.059545669704675674,local WSL GPU
+qwen25_15b_text2sql_r16a32_lr1e4_v1,Qwen/Qwen2.5-1.5B-Instruct,16,5000,500,1024,0.0001,32,0.05,42,4-bit NF4,1,1132.98,0.05369124561548233,local WSL GPU
+qwen25_15b_text2sql_r32a64_lr1e4_v1,Qwen/Qwen2.5-1.5B-Instruct,32,5000,500,1024,0.0001,64,0.05,42,4-bit NF4,1,1077.81,0.04981090873479843,local WSL GPU

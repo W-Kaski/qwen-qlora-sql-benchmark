@@ -66,6 +66,7 @@ def test_validate_training_config_requires_completion_only_loss() -> None:
         "data": {"train_path": "data/splits/train.jsonl", "eval_path": "data/splits/eval.jsonl"},
         "training": {
             "completion_only_loss": False,
+            "seed": 42,
             "max_seq_length": 1024,
             "per_device_train_batch_size": 1,
             "gradient_accumulation_steps": 16,
@@ -76,4 +77,24 @@ def test_validate_training_config_requires_completion_only_loss() -> None:
     }
 
     with pytest.raises(ValueError, match="completion_only_loss"):
+        validate_training_config(config)
+
+
+def test_validate_training_config_rejects_negative_seed() -> None:
+    config = {
+        "model": {"name": "Qwen/Qwen2.5-1.5B-Instruct"},
+        "data": {"train_path": "data/splits/train.jsonl", "eval_path": "data/splits/eval.jsonl"},
+        "training": {
+            "completion_only_loss": True,
+            "seed": -1,
+            "max_seq_length": 1024,
+            "per_device_train_batch_size": 1,
+            "gradient_accumulation_steps": 16,
+            "learning_rate": 0.0001,
+        },
+        "lora": {"r": 8, "alpha": 16, "dropout": 0.05, "target_modules": ["q_proj"]},
+        "outputs": {"adapter_dir": "outputs/adapters/lora_r8", "log_path": "results/logs/x.jsonl"},
+    }
+
+    with pytest.raises(ValueError, match="training.seed"):
         validate_training_config(config)

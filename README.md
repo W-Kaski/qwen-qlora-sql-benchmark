@@ -1,21 +1,18 @@
-# Qwen QLoRA Text-to-SQL Benchmark
+# Qwen2.5 QLoRA Text-to-SQL Benchmark
 
-QLoRA fine-tuning and deployment checks for `Qwen/Qwen2.5-1.5B-Instruct` on a small Text-to-SQL task.
+Reproducible QLoRA fine-tuning and evaluation for
+`Qwen/Qwen2.5-1.5B-Instruct` on `b-mc2/sql-create-context`.
 
-The repo covers:
+This repository focuses on the ML engineering loop around a small Text-to-SQL
+experiment: dataset conversion, YAML-managed QLoRA training, LoRA rank
+ablation, exact-match evaluation, SQL parse checks, error analysis, result
+plots, and a local FastAPI demo with SQL validation.
 
-- rank ablation for LoRA `r=8`, `r=16`, and `r=32`
-- baseline vs adapter quality metrics
-- SQL error analysis
-- base-model serving benchmark with Transformers and vLLM
-- guarded FastAPI inference endpoint
-- SQLite execution sandbox
-- deployment-style execution evaluation
-- Kaggle T4 reproduction scripts
+It is not a production SQL assistant.
 
 ## Results
 
-### Text-to-SQL Eval
+Evaluation split: 500 examples.
 
 | Model | Exact Match | SQL Parse Valid | Main Error Type |
 | --- | ---: | ---: | --- |
@@ -24,19 +21,51 @@ The repo covers:
 | LoRA rank 16 | 0.696 | 0.994 | filter / condition mismatch |
 | LoRA rank 32 | 0.712 | 0.990 | filter / condition mismatch |
 
-Exact Match increased from `0.044` to `0.712` with the rank 32 adapter. The base model already emits parseable SQL most of the time; the adapter mainly improves column selection, filter construction, aggregation choice, and dataset-specific SQL formatting.
+The rank 32 adapter improved Exact Match from `0.044` to `0.712`. The base
+model already produced parseable SQL most of the time, so the main gain came
+from better column selection, filter construction, aggregation choice, and
+dataset-specific SQL formatting.
 
-### Deployment Eval
+## Method
 
-The deployment evaluation executes generated SQL against in-memory SQLite databases.
+- Base model: `Qwen/Qwen2.5-1.5B-Instruct`
+- Dataset: `b-mc2/sql-create-context`
+- Verified source fields: `answer`, `question`, `context`
+- Train split: 5000 rows
+- Eval split: 500 rows
+- SFT format: prompt-completion JSONL
+- Loss target: completion tokens only
+- Quantization: 4-bit NF4
+- LoRA ranks: `r=8`, `r=16`, `r=32`
+- Epochs: 1
+- Max sequence length: 1024
+- Training and generation seed: 42
+
+All experiment parameters are stored in `configs/`.
+
+LoRA parameter scale:
+
+| Rank | Trainable Parameters | Trainable Percent |
+| ---: | ---: | ---: |
+| 8 | 9,232,384 | 0.517% |
+| 16 | 18,464,768 | 1.028% |
+| 32 | 36,929,536 | 2.036% |
+
+## Execution Check
+
+The repository includes a small SQLite-backed execution check for the rank 32
+adapter. It executes generated SQL against in-memory SQLite databases and
+compares the result with reference SQL execution.
 
 | Cases | Parse Valid | Select-only | Execution Valid | Execution Accuracy | P50 Latency | P95 Latency |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 30 | 1.000 | 1.000 | 1.000 | 0.600 | 0.456s | 1.182s |
 
-Interpretation: the adapter is usable for a scoped demo with explicit schemas and validation metadata. It is not a general SQL assistant. The main remaining failures are value normalization, wrong projection, string predicates, `NULL`, `GROUP BY`, and `LIMIT/OFFSET`.
+This is a small execution sanity check, not a broad Text-to-SQL benchmark. The
+main remaining failures are value normalization, wrong projection, string
+predicates, `NULL`, `GROUP BY`, and `LIMIT/OFFSET`.
 
-### Serving Benchmark
+## Serving Sanity Check
 
 Base model, sequential single-request benchmark:
 
@@ -45,89 +74,24 @@ Base model, sequential single-request benchmark:
 | Transformers | 20 | 0.3144s | 0.5359s | 76.18 |
 | vLLM | 20 | 0.2156s | 0.4098s | 74.61 |
 
-This is a latency sanity check, not a high-concurrency serving study.
+This check measures local single-request latency. It does not measure
+high-concurrency serving throughput.
 
-## Repository Layout
+## Reproduce
 
-```text
-configs/       YAML experiment configs
-data/          local data staging and deployment eval cases
-docs/          reports, specs, and reproduction notes
-examples/      API request examples
-model_cards/   Hugging Face adapter card
-notebooks/     Kaggle-oriented notebooks
-outputs/       local adapters and checkpoints, ignored by git
-results/       tracked result tables/figures plus ignored raw artifacts
-scripts/       local, Kaggle, API, eval, and packaging entrypoints
-src/           Python package
-tests/         unit tests
-```
-
-## Quick Validation
+Install dependencies:
 
 ```bash
-uv run --extra dev pytest
-uv run --extra dev ruff check .
+uv sync --extra dev --extra data --extra kaggle
 ```
 
-## Local API Demo
-
-Start the guarded API:
-
-```bash
-scripts/run_api.sh
-```
-
-Send one request:
-
-```bash
-scripts/demo_request.sh
-```
-
-Run both in one command:
-
-```bash
-scripts/run_local_demo.sh
-```
-
-The API returns:
-
-- `sql`
-- `parse_valid`
-- `is_select_only`
-- `latency_ms`
-- `error`
-- optional SQLite `execution` metadata
-
-The real generator expects the rank 32 adapter under `outputs/adapters/lora_r32`.
-
-## Dataset
-
-Dataset: `b-mc2/sql-create-context`
-
-Verified source fields:
-
-- `answer`
-- `question`
-- `context`
-
-Local split:
-
-| Split | Rows |
-| --- | ---: |
-| train | 5000 |
-| eval | 500 |
-| benchmark prompts | 100 |
-
-Prepare the split:
+Prepare the dataset:
 
 ```bash
 uv run --extra data python -m qwen_qlora_sql_benchmark.data.download_sql_create_context
 ```
 
-## Training And Evaluation
-
-Local or Kaggle GPU runtime:
+Run rank training and evaluation:
 
 ```bash
 scripts/kaggle_train_r8.sh
@@ -138,7 +102,7 @@ scripts/kaggle_train_r32.sh
 scripts/kaggle_eval_r32.sh
 ```
 
-Post-process:
+Post-process results:
 
 ```bash
 scripts/score_quality_metrics.sh
@@ -146,61 +110,115 @@ scripts/analyze_errors.sh
 scripts/plot_results.sh
 ```
 
-Deployment evaluation:
+Run the SQLite-backed execution check:
 
 ```bash
-scripts/run_deployment_eval.sh
+scripts/run_execution_eval.sh
 ```
 
-## Kaggle
+Full reproduction notes are in [docs/REPRODUCTION.md](docs/REPRODUCTION.md).
+Kaggle environment validation is documented in
+[docs/KAGGLE_VALIDATION.md](docs/KAGGLE_VALIDATION.md).
 
-Kaggle setup:
+## Local API Demo
+
+Start the local API and browser console:
 
 ```bash
-pip install -r requirements-kaggle.txt
-scripts/kaggle_setup_check.sh
-scripts/kaggle_prepare_dataset.sh
+scripts/run_api.sh
 ```
 
-Full runbook: [docs/KAGGLE_REPRODUCTION.md](docs/KAGGLE_REPRODUCTION.md)
+Open:
 
-Kaggle validation:
+```text
+http://127.0.0.1:8000/
+```
 
-- kernel: `ericwang7717/qwen-qlora-sql-validation`
-- version: 3
-- status: complete
-- checks: `pytest`, `ruff`, dataset preparation, runtime snapshot
-- GPU runtime: confirmed with `nvidia-smi`
+The API endpoint `/generate-sql` accepts:
 
-Current note: the reported full training runs were produced on local WSL GPU. Kaggle validation covers setup, tests, lint, data preparation, and GPU runtime availability; it does not run the full QLoRA training job.
+- `schema`
+- `question`
+- `execute`
+- `setup_sql`
+- `max_rows`
+- `timeout_ms`
+
+It returns generated SQL, SQL parse status, read-only `SELECT` status, latency,
+and optional SQLite execution metadata. The real generator expects the rank 32
+adapter under `outputs/adapters/lora_r32`.
+
+When `execute` is true, `setup_sql` is limited to single `CREATE TABLE` or
+`INSERT` statements before the generated read-only `SELECT` is executed.
+
+Send one scripted request:
+
+```bash
+scripts/demo_request.sh
+```
+
+Run the API and scripted request together:
+
+```bash
+scripts/run_local_demo.sh
+```
+
+## Repository Layout
+
+```text
+configs/       YAML experiment configs
+data/          local data staging and SQLite execution cases
+docs/          technical report, reproduction notes, and analyses
+examples/      API request examples
+model_cards/   Hugging Face adapter card
+notebooks/     Kaggle-oriented setup and data notebooks
+outputs/       local adapters and checkpoints, ignored by git
+results/       tracked result tables and figures
+scripts/       local, Kaggle, API, eval, and packaging entrypoints
+src/           Python package
+tests/         unit tests
+```
 
 ## Hugging Face
 
-Rank 32 adapter: [W-Kaski/qwen25-15b-text2sql-lora-r32](https://huggingface.co/W-Kaski/qwen25-15b-text2sql-lora-r32)
+Rank 32 adapter:
+[W-Kaski/qwen25-15b-text2sql-lora-r32](https://huggingface.co/W-Kaski/qwen25-15b-text2sql-lora-r32)
 
-Adapter packaging assets are under `model_cards/`. Re-upload after retraining:
+The GitHub repository does not track adapter weights or checkpoints. Packaging
+assets are under `model_cards/`.
+
+## Validation
 
 ```bash
-HF_REPO_ID=W-Kaski/qwen25-15b-text2sql-lora-r32 scripts/hf_upload_adapter.sh
+uv run --extra dev pytest
+uv run --extra dev ruff check .
 ```
 
-Packaging details: [docs/HUGGING_FACE_PACKAGING.md](docs/HUGGING_FACE_PACKAGING.md)
+Latest local validation:
+
+- `56 passed`
+- `ruff check .`: all checks passed
 
 ## Reports
 
 - [Technical report](docs/TECHNICAL_REPORT.md)
+- [Reproduction](docs/REPRODUCTION.md)
 - [Dataset analysis](docs/DATASET_ANALYSIS.md)
 - [Evaluation analysis](docs/EVAL_ANALYSIS.md)
 - [Error analysis](docs/ERROR_ANALYSIS.md)
-- [Deployment readiness](docs/DEPLOYMENT_READINESS.md)
-- [Deployment evaluation](docs/DEPLOYMENT_EVAL.md)
-- [Benchmark analysis](docs/BENCHMARK_ANALYSIS.md)
+- [SQLite execution evaluation](docs/EXECUTION_EVAL.md)
+- [Serving benchmark analysis](docs/BENCHMARK_ANALYSIS.md)
+- [Hugging Face packaging](docs/HUGGING_FACE_PACKAGING.md)
+
+Tracked result tables include `results/tables/run_metadata.csv` and
+`results/tables/parameter_count.csv`.
 
 ## Limits
 
 - Exact Match rejects semantically equivalent SQL.
-- SQL parse validity does not prove correctness.
+- SQL parse validity does not prove execution correctness.
 - The main dataset is mostly single-table SQL.
-- The deployment eval is small and SQLite-only.
+- The SQLite execution check is small and uses in-memory databases.
 - vLLM LoRA serving is not part of this version.
-- Generated SQL must be validated and sandboxed before user-facing use.
+- Generated SQL must be validated and sandboxed before any user-facing use.
+- Full rank training results were produced on a local WSL GPU. Kaggle validation
+  covers setup, tests, lint, dataset preparation, and GPU runtime availability.

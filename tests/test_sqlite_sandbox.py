@@ -37,6 +37,30 @@ def test_execute_select_query_rejects_multi_statement_query() -> None:
     assert result.execution_error == "only one read-only SELECT statement is allowed"
 
 
+def test_execute_select_query_rejects_unsafe_setup_sql() -> None:
+    result = execute_select_query(
+        sql="SELECT name FROM users",
+        setup_sql=["CREATE TABLE users (name TEXT)", "DROP TABLE users"],
+    )
+
+    assert result.execution_valid is False
+    assert result.execution_error == (
+        "setup_sql allows only single CREATE TABLE or INSERT statements"
+    )
+
+
+def test_execute_select_query_rejects_multi_statement_setup_sql() -> None:
+    result = execute_select_query(
+        sql="SELECT name FROM users",
+        setup_sql=["CREATE TABLE users (name TEXT); INSERT INTO users VALUES ('Alice')"],
+    )
+
+    assert result.execution_valid is False
+    assert result.execution_error == (
+        "setup_sql allows only single CREATE TABLE or INSERT statements"
+    )
+
+
 def test_execute_select_query_reports_sqlite_errors() -> None:
     result = execute_select_query(sql="SELECT missing FROM users", setup_sql=[])
 

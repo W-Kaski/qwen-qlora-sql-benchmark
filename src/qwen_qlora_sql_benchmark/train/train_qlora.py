@@ -67,6 +67,7 @@ def validate_training_config(config: dict[str, Any]) -> None:
             "data.train_path",
             "data.eval_path",
             "training.completion_only_loss",
+            "training.seed",
             "training.max_seq_length",
             "training.per_device_train_batch_size",
             "training.gradient_accumulation_steps",
@@ -81,6 +82,8 @@ def validate_training_config(config: dict[str, Any]) -> None:
     )
     if config["training"]["completion_only_loss"] is not True:
         raise ValueError("training.completion_only_loss must be true")
+    if int(config["training"]["seed"]) < 0:
+        raise ValueError("training.seed must be non-negative")
     if int(config["training"]["max_seq_length"]) <= 0:
         raise ValueError("training.max_seq_length must be positive")
     if int(config["lora"]["r"]) <= 0:
@@ -120,9 +123,12 @@ def run_training(config: dict[str, Any]) -> None:
         BitsAndBytesConfig,
         Trainer,
         TrainingArguments,
+        set_seed,
     )
 
     validate_training_config(config)
+    seed = int(config["training"]["seed"])
+    set_seed(seed)
     train_limit = config.get("diagnostic", {}).get("max_train_samples")
     eval_limit = config.get("diagnostic", {}).get("max_eval_samples")
     train_examples = load_prompt_completion_examples(
@@ -186,6 +192,8 @@ def run_training(config: dict[str, Any]) -> None:
         bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         fp16=torch.cuda.is_available() and not torch.cuda.is_bf16_supported(),
         remove_unused_columns=False,
+        seed=seed,
+        data_seed=seed,
     )
     trainer = Trainer(
         model=model,
@@ -203,6 +211,7 @@ def run_training(config: dict[str, Any]) -> None:
             "train_examples": len(train_dataset),
             "eval_examples": len(eval_dataset),
             "max_steps": int(max_steps),
+            "seed": seed,
             "adapter_dir": str(output_dir),
         },
     )

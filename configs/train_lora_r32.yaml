@@ -8,6 +8,7 @@ data:
   eval_path: data/splits/eval.jsonl
 training:
   completion_only_loss: true
+  seed: 42
   max_seq_length: 1024
   per_device_train_batch_size: 1
   gradient_accumulation_steps: 16

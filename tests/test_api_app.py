@@ -22,6 +22,23 @@ def test_health_returns_status() -> None:
     assert response.json() == {"status": "ok"}
 
 
+def test_root_returns_chat_console() -> None:
+    from fastapi.testclient import TestClient
+
+    client = TestClient(create_app(generator=StaticGenerator("SELECT name FROM users")))
+
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert "text/html" in response.headers["content-type"]
+    html = response.text
+    assert "Text-to-SQL Console" in html
+    assert 'id="messages"' in html
+    assert 'id="schema"' in html
+    assert 'id="question"' in html
+    assert "/generate-sql" in html
+
+
 def test_generate_sql_returns_validation_metadata() -> None:
     from fastapi.testclient import TestClient
 

@@ -16,7 +16,7 @@ from qwen_qlora_sql_benchmark.benchmark.serving_benchmark import percentile
 
 
 @dataclass(frozen=True)
-class DeploymentCase:
+class ExecutionCase:
     id: str
     tags: list[str]
     schema: str
@@ -25,28 +25,28 @@ class DeploymentCase:
     reference_sql: str
 
 
-def load_deployment_cases(path: Path) -> list[DeploymentCase]:
-    cases: list[DeploymentCase] = []
+def load_execution_cases(path: Path) -> list[ExecutionCase]:
+    cases: list[ExecutionCase] = []
     with path.open(encoding="utf-8") as handle:
         for line_number, line in enumerate(handle, start=1):
             if not line.strip():
                 continue
             payload = json.loads(line)
             cases.append(
-                DeploymentCase(
+                ExecutionCase(
                     id=_require_string(payload, "id", path, line_number),
-                    tags=list(payload.get("tags", [])),
+                    tags=_require_string_list(payload, "tags", path, line_number),
                     schema=_require_string(payload, "schema", path, line_number),
                     question=_require_string(payload, "question", path, line_number),
-                    setup_sql=list(payload["setup_sql"]),
+                    setup_sql=_require_string_list(payload, "setup_sql", path, line_number),
                     reference_sql=_require_string(payload, "reference_sql", path, line_number),
                 )
             )
     return cases
 
 
-def evaluate_deployment_cases(
-    cases: list[DeploymentCase],
+def evaluate_execution_cases(
+    cases: list[ExecutionCase],
     generator: SqlGenerator,
     timeout_ms: int = 1000,
     max_rows: int = 20,
@@ -90,7 +90,7 @@ def evaluate_deployment_cases(
     return rows
 
 
-def summarize_deployment_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
+def summarize_execution_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
     latencies = [float(row["latency_seconds"]) for row in rows]
     total = len(rows)
     return {
@@ -105,13 +105,13 @@ def summarize_deployment_rows(rows: list[dict[str, Any]]) -> dict[str, Any]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Run SQLite-backed deployment evaluation.")
-    parser.add_argument("--cases", type=Path, default=Path("data/deployment_eval/cases.jsonl"))
-    parser.add_argument("--output", type=Path, default=Path("results/tables/deployment_eval.csv"))
+    parser = argparse.ArgumentParser(description="Run SQLite-backed execution evaluation.")
+    parser.add_argument("--cases", type=Path, default=Path("data/execution_eval/cases.jsonl"))
+    parser.add_argument("--output", type=Path, default=Path("results/tables/execution_eval.csv"))
     parser.add_argument(
         "--summary-output",
         type=Path,
-        default=Path("results/tables/deployment_eval_summary.csv"),
+        default=Path("results/tables/execution_eval_summary.csv"),
     )
     parser.add_argument("--adapter-path", type=Path, default=Path("outputs/adapters/lora_r32"))
     return parser.parse_args()
@@ -119,10 +119,10 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
-    cases = load_deployment_cases(args.cases)
+    cases = load_execution_cases(args.cases)
     generator = LazyPeftSqlGenerator(adapter_path=args.adapter_path)
-    rows = evaluate_deployment_cases(cases, generator)
-    summary = summarize_deployment_rows(rows)
+    rows = evaluate_execution_cases(cases, generator)
+    summary = summarize_execution_rows(rows)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(args.output, index=False)
     pd.DataFrame([summary]).to_csv(args.summary_output, index=False)
@@ -134,6 +134,22 @@ def _require_string(payload: dict[str, Any], key: str, path: Path, line_number: 
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{path}:{line_number}.{key} must be a non-empty string")
     return value.strip()
+
+
+def _require_string_list(
+    payload: dict[str, Any], key: str, path: Path, line_number: int
+) -> list[str]:
+    value = payload.get(key)
+    if not isinstance(value, list):
+        raise ValueError(f"{path}:{line_number}.{key} must be a list of strings")
+    strings: list[str] = []
+    for item_number, item in enumerate(value):
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(
+                f"{path}:{line_number}.{key}[{item_number}] must be a non-empty string"
+            )
+        strings.append(item.strip())
+    return strings
 
 
 def _mean_bool(rows: list[dict[str, Any]], key: str) -> float:

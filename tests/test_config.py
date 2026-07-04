@@ -34,3 +34,23 @@ def test_yaml_test_fixture_is_valid() -> None:
     payload = yaml.safe_load("training:\n  completion_only_loss: true\n")
 
     assert payload["training"]["completion_only_loss"] is True
+
+
+def test_lora_training_configs_define_seed() -> None:
+    for config_path in Path("configs").glob("train_lora*.yaml"):
+        config = load_yaml_config(config_path)
+        seed = config["training"]["seed"]
+
+        assert isinstance(seed, int), config_path
+        assert seed >= 0, config_path
+
+
+def test_generation_configs_define_seed() -> None:
+    for config_path in Path("configs").glob("*.yaml"):
+        config = load_yaml_config(config_path)
+        if "generation" not in config:
+            continue
+        seed = config["generation"]["seed"]
+
+        assert isinstance(seed, int), config_path
+        assert seed >= 0, config_path

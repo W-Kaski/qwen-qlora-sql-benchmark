@@ -21,7 +21,7 @@ def test_validate_adapter_eval_config_accepts_required_paths(tmp_path: Path) -> 
         "model": {"name": "Qwen/Qwen2.5-1.5B-Instruct"},
         "adapter": {"path": str(adapter_dir)},
         "data": {"eval_path": "data/splits/eval.jsonl"},
-        "generation": {"max_new_tokens": 256, "temperature": 0.0, "top_p": 1.0},
+        "generation": {"seed": 42, "max_new_tokens": 256, "temperature": 0.0, "top_p": 1.0},
         "outputs": {"predictions_path": "results/eval_outputs/x.jsonl"},
     }
 

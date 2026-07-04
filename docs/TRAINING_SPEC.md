@@ -13,6 +13,8 @@
 - Epochs: 1 for the first release
 - Learning rate: `0.0001`
 - Dropout: `0.05`
+- Training seed: `42`
+- Generation seed: `42`
 
 ## Experiments
 
@@ -23,6 +25,16 @@
 | rank 8 | `configs/train_lora_r8.yaml` | 8 | 16 |
 | rank 16 | `configs/train_lora_r16.yaml` | 16 | 32 |
 | rank 32 | `configs/train_lora_r32.yaml` | 32 | 64 |
+
+## Parameter Scale
+
+| Rank | Trainable Parameters | Trainable Percent |
+| ---: | ---: | ---: |
+| 8 | 9,232,384 | 0.517% |
+| 16 | 18,464,768 | 1.028% |
+| 32 | 36,929,536 | 2.036% |
+
+The full table is stored in `results/tables/parameter_count.csv`.
 
 ## Diagnostics
 

@@ -52,7 +52,7 @@ The baseline already produces SQL-shaped output, but most non-exact rows fail be
 
 Projection mismatch also improves, from 18.2% for the baseline to 12.6% for rank 32. This supports the main finding that QLoRA is learning dataset-specific query structure and column selection, not merely SQL syntax.
 
-Invalid SQL remains low for every model. The remaining gap is mostly semantic and formatting-sensitive under Exact Match. Execution-based checks are handled in the deployment evaluation.
+Invalid SQL remains low for every model. The remaining gap is mostly semantic and formatting-sensitive under Exact Match. Execution-based checks are handled in the SQLite execution evaluation.
 
 ## Limitations
 

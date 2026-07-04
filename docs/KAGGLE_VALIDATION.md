@@ -1,4 +1,7 @@
-# Kaggle Reproduction
+# Kaggle Validation
+
+This document records the Kaggle environment validation path for the repository.
+It is not evidence of a full Kaggle QLoRA rank ablation run.
 
 ## Runtime
 
@@ -8,9 +11,10 @@ Recommended Kaggle runtime:
 - Python GPU notebook
 - Internet enabled for Hugging Face model and dataset downloads
 
-The first release does not require paid cloud GPU.
+The first release targets `Qwen/Qwen2.5-1.5B-Instruct`. Do not start with a 7B
+model for this project version.
 
-## Validation Run
+## Completed Validation
 
 Kaggle validation has been run through:
 
@@ -28,36 +32,32 @@ Validated steps:
 - dataset preparation with `qwen_qlora_sql_benchmark.data.download_sql_create_context`
 - runtime snapshot command
 
-Observed Kaggle validation result:
+Observed validation result:
 
 - tests: 55 passed
 - lint: all checks passed
 - status file: `KAGGLE_VALIDATION_OK`
 
-The validation run does not execute full QLoRA training. Full rank training remains the expensive Kaggle path described below.
+The validation run does not execute full QLoRA training.
 
-## Notebook Order
+## Setup Commands
 
-Use one notebook per job:
-
-1. `notebooks/01_kaggle_setup_check.ipynb`
-2. `notebooks/02_data_preview.ipynb`
-3. training notebook for one rank
-4. evaluation notebook for the same rank
-5. result export notebook or terminal cell
-
-The repository scripts are the run commands. Notebook cells call these scripts instead of duplicating training logic.
-
-## Setup
+Install Kaggle dependencies:
 
 ```bash
 pip install -r requirements-kaggle.txt
+```
+
+Run setup check:
+
+```bash
 scripts/kaggle_setup_check.sh
 ```
 
-Expected setup output includes the Python version, CUDA availability, GPU name, and memory summary.
+Expected setup output includes the Python version, CUDA availability, GPU name,
+and memory summary.
 
-## Dataset Preparation
+Prepare data:
 
 ```bash
 scripts/kaggle_prepare_dataset.sh
@@ -69,18 +69,11 @@ Expected outputs:
 - `data/splits/eval.jsonl`
 - `data/splits/benchmark_prompts.jsonl`
 
-The source dataset fields have been verified as `answer`, `question`, and `context`.
+The source dataset fields are `answer`, `question`, and `context`.
 
-## Training
+## Full Training Path
 
-Diagnostic-first path:
-
-```bash
-scripts/local_train_r8_diagnostic.sh
-scripts/local_eval_r8_diagnostic.sh
-```
-
-Full rank ablation:
+Full rank ablation commands:
 
 ```bash
 scripts/kaggle_train_r8.sh
@@ -117,13 +110,7 @@ scripts/analyze_errors.sh
 scripts/plot_results.sh
 ```
 
-Optional serving benchmark:
-
-```bash
-scripts/run_serving_benchmark.sh
-```
-
-## Artifact Contract
+## Artifact Boundary
 
 Tracked in GitHub:
 
@@ -142,17 +129,17 @@ Not tracked in GitHub:
 - checkpoints
 - local logs
 
-After a Kaggle run, download the outputs and copy them into the same paths before regenerating result tables and figures.
+After a Kaggle run, download the outputs and copy them into the same paths
+before regenerating result tables and figures.
 
 ## T4 Risk Notes
 
-The first safe full-run target is `Qwen/Qwen2.5-1.5B-Instruct`. Rank 8, 16, and 32 QLoRA runs are expected to fit on a 16 GB T4 with batch size 1 and gradient accumulation.
+Rank 8, 16, and 32 QLoRA runs are configured to fit a 16 GB T4 with batch size 1
+and gradient accumulation.
 
 If a run fails with OOM:
 
 1. reduce `training.max_seq_length`
 2. reduce eval batch pressure by evaluating fewer rows first
-3. run the diagnostic config before a full config
+3. run a diagnostic config before a full config
 4. restart the Kaggle runtime before retrying
-
-Do not start with a 7B model for this project version.

@@ -15,8 +15,8 @@ def test_kaggle_reproduction_scripts_exist() -> None:
         assert Path(path).is_file()
 
 
-def test_kaggle_reproduction_doc_points_to_existing_scripts() -> None:
-    doc = Path("docs/KAGGLE_REPRODUCTION.md").read_text(encoding="utf-8")
+def test_kaggle_validation_doc_points_to_existing_scripts() -> None:
+    doc = Path("docs/KAGGLE_VALIDATION.md").read_text(encoding="utf-8")
 
     assert "scripts/kaggle_train_r32.sh" in doc
     assert "scripts/kaggle_eval_r32.sh" in doc

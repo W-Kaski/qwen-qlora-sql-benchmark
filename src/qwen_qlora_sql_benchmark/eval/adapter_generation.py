@@ -28,6 +28,7 @@ def validate_adapter_eval_config(config: dict[str, Any]) -> None:
             "model.name",
             "adapter.path",
             "data.eval_path",
+            "generation.seed",
             "generation.max_new_tokens",
             "generation.temperature",
             "generation.top_p",
@@ -46,11 +47,13 @@ def generate_with_peft_adapter(
     max_new_tokens: int,
     temperature: float,
     top_p: float,
+    seed: int,
 ) -> list[dict[str, str]]:
     import torch
     from peft import PeftModel
-    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+    from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, set_seed
 
+    set_seed(seed)
     tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=True)
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
@@ -106,6 +109,7 @@ def main() -> None:
         max_new_tokens=int(config["generation"]["max_new_tokens"]),
         temperature=float(config["generation"]["temperature"]),
         top_p=float(config["generation"]["top_p"]),
+        seed=int(config["generation"]["seed"]),
     )
     write_prediction_records(Path(config["outputs"]["predictions_path"]), predictions)
 

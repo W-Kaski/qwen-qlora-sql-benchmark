@@ -34,6 +34,7 @@ It is not intended for production analytics, arbitrary database access, safety-c
 - LoRA dropout: 0.05
 - epochs: 1
 - max sequence length: 1024
+- training and generation seed: 42
 
 ## Results
 
@@ -44,7 +45,7 @@ Evaluation on the 500-row Text-to-SQL split:
 | Exact Match | 0.712 |
 | SQL parse valid | 0.990 |
 
-Deployment-style SQLite evaluation:
+SQLite execution evaluation:
 
 | Metric | Value |
 | --- | ---: |
@@ -56,7 +57,7 @@ Deployment-style SQLite evaluation:
 
 ## Limitations
 
-The adapter is better at generating SQL-shaped output and matching dataset-specific SQL patterns than the base model, but it is not a general SQL assistant.
+The adapter improves dataset-specific SQL formatting and schema-conditioned query construction over the base model, but it is not designed for arbitrary databases.
 
 Known failure modes:
 
@@ -67,7 +68,8 @@ Known failure modes:
 - imperfect `NULL` handling
 - `LIMIT/OFFSET` mistakes
 
-Use parse validation, read-only checks, execution sandboxing, timeout protection, and row limits before exposing generated SQL to users.
+Use parse validation, read-only checks, setup-statement restrictions, timeout
+protection, and row limits before exposing generated SQL to users.
 
 ## Repository
 
